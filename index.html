@@ -78,8 +78,8 @@ nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:60; background:va
 
 /* hero */
 .hero{position:relative; min-height:0;}
-.hero-bg{position:absolute; inset:0; z-index:0;}
-.hero-bg img{width:100%; height:100%; object-fit:cover; display:block;}
+.hero-bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
+.hero-bg img{width:100%; height:100%; object-fit:cover; display:block; will-change:transform;}
 .hero-bg::after{content:""; position:absolute; inset:0; background:linear-gradient(100deg, rgba(10,13,19,.82) 10%, rgba(10,13,19,.45) 48%, rgba(10,13,19,.2) 75%), linear-gradient(0deg, rgba(10,13,19,.55), transparent 55%);}
 .hero-inner{position:relative; z-index:1; padding-block:84px 110px; color:#F2ECE0;}
 .badge-pill{display:inline-flex; align-items:center; gap:8px; background:rgba(242,236,224,.1); border:1px solid rgba(242,236,224,.3); backdrop-filter:blur(6px); padding:9px 16px; border-radius:999px; font-size:13px;}
@@ -113,11 +113,12 @@ nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:60; background:va
 .split{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
 .split.rev{grid-template-columns:1fr 1fr;}
 .split.rev > :first-child{order:2;}
-.split img{width:100%; height:100%; object-fit:cover; border-radius:18px; aspect-ratio:4/5; display:block;}
+.media-frame{border-radius:18px; aspect-ratio:4/5; overflow:hidden; position:relative;}
+.split img, .media-frame img{width:100%; height:100%; object-fit:cover; display:block; will-change:transform;}
 .split-text h2{font-size:clamp(28px,4.2vw,44px); margin-top:14px;}
 .split-text p{color:var(--muted); font-size:16.5px; margin-top:18px; max-width:48ch;}
 .split-link{display:inline-flex; align-items:center; gap:8px; margin-top:22px; font-weight:600; border-bottom:1.5px solid var(--gold); padding-bottom:2px;}
-@media (max-width:900px){ .split, .split.rev{grid-template-columns:1fr;} .split.rev > :first-child{order:0;} .split img{aspect-ratio:16/10;} }
+@media (max-width:900px){ .split, .split.rev{grid-template-columns:1fr;} .split.rev > :first-child{order:0;} .media-frame{aspect-ratio:16/10;} }
 
 section{padding-block:96px;}
 .section-head{max-width:640px;}
@@ -128,8 +129,8 @@ section{padding-block:96px;}
 .bg-alt{background:var(--cream-alt);}
 
 /* calculator */
-.calc-photo{position:absolute; inset:0; z-index:0; opacity:.22;}
-.calc-photo img{width:100%; height:100%; object-fit:cover;}
+.calc-photo{position:absolute; inset:0; z-index:0; opacity:.22; overflow:hidden;}
+.calc-photo img{width:100%; height:100%; object-fit:cover; will-change:transform;}
 .calc-wrap{position:relative; z-index:1;}
 .calc-panel{background:rgba(242,236,224,.04); border:1px solid var(--on-navy-line); border-radius:22px; backdrop-filter:blur(6px); overflow:hidden;}
 .wizard-progress{display:grid; grid-template-columns:repeat(5,1fr); border-bottom:1px solid var(--on-navy-line);}
@@ -221,8 +222,8 @@ input[type=range]{flex:1; accent-color:var(--gold); min-width:0;}
 
 /* closing */
 .closing{position:relative; min-height:0; overflow:hidden;}
-.closing-bg{position:absolute; inset:0; z-index:0;}
-.closing-bg img{width:100%; height:100%; object-fit:cover;}
+.closing-bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
+.closing-bg img{width:100%; height:100%; object-fit:cover; will-change:transform;}
 .closing-bg::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,13,19,.55), rgba(10,13,19,.88));}
 .closing-inner{position:relative; z-index:1; text-align:center; padding-block:100px; color:#fff;}
 .closing h2{font-size:clamp(32px,6vw,58px); font-style:italic; font-weight:500;}
@@ -252,9 +253,69 @@ footer{background:var(--navy); color:#F0EAD9;}
 @media (max-width:560px){.foot-top{grid-template-columns:1fr;}}
 
 @media (max-width:900px){ .nav-links{display:none;} .menu-toggle{display:flex;} }
+
+/* ---------- motion layer ---------- */
+.scroll-progress{position:fixed; top:env(safe-area-inset-top,0px); left:0; width:100%; height:2.5px; z-index:80; background:transparent; pointer-events:none;}
+.scroll-progress::after{content:""; display:block; height:100%; width:calc(var(--sp,0)*100%); background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+
+html.has-cursor, html.has-cursor *{cursor:none !important;}
+.cursor{position:fixed; top:0; left:0; z-index:95; pointer-events:none; opacity:0; transition:opacity .25s;}
+.cursor.is-ready{opacity:1;}
+.cursor.is-hidden{opacity:0;}
+.cursor__dot{position:fixed; top:0; left:0; width:6px; height:6px; margin:-3px; border-radius:50%; background:var(--gold); transform:translate3d(-50%,-50%,0);}
+.cursor__ring{position:fixed; top:0; left:0; width:38px; height:38px; margin:-19px; border-radius:50%; border:1.5px solid var(--gold); transform:translate3d(-50%,-50%,0); transition:width .25s,height .25s,margin .25s,background .25s,border-color .25s;}
+.cursor.is-hover .cursor__ring{width:64px; height:64px; margin:-32px; background:rgba(201,148,46,.12);}
+.cursor.is-down .cursor__ring{width:30px; height:30px; margin:-15px;}
+
+nav{transition:transform .4s cubic-bezier(.2,.8,.2,1), background .3s;}
+nav.is-hidden{transform:translateY(-100%);}
+
+/* word-mask heading reveal */
+.lines .line{display:block; overflow:hidden; padding-bottom:.08em; margin-bottom:-.08em;}
+.lines .word{display:inline-block; overflow:hidden; vertical-align:top;}
+.lines .word > span{display:inline-block; will-change:transform; transform:translateY(110%); transition:transform .85s cubic-bezier(.16,1,.3,1);}
+html.js-anim.has-gsap .lines .word > span{transform:translateY(110%);}
+.lines.is-in .word > span{transform:translateY(0);}
+@media (prefers-reduced-motion:reduce){ .lines .word > span{transform:none !important; transition:none !important;} }
+
+/* marquee */
+.marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding-block:22px; background:var(--cream-alt);}
+.marquee__track{display:flex; width:max-content; will-change:transform;}
+.marquee__track span{font-family:var(--font-display); font-weight:500; font-size:clamp(20px,2.6vw,30px); color:var(--muted); white-space:nowrap; padding-right:48px; display:flex; align-items:center; gap:48px;}
+.marquee__track span em{color:var(--gold); font-style:italic;}
+
+/* pull-quote scrub */
+.pull-quote{padding-block:88px;}
+.pull-quote blockquote{font-family:var(--font-display); font-size:clamp(26px,4vw,44px); font-weight:400; line-height:1.3; max-width:22ch; margin:0 auto; text-align:center;}
+.pull-quote .sw{opacity:.22; transition:opacity .2s;}
+html.js-anim.has-gsap .pull-quote .sw{opacity:.22;}
+.pull-quote cite{display:block; margin-top:26px; font-style:normal; font-size:13px; color:var(--muted); text-align:center; letter-spacing:.04em; text-transform:uppercase;}
+@media (prefers-reduced-motion:reduce){ .pull-quote .sw{opacity:1 !important;} }
+
+/* stack-card process */
+.stack{display:flex; flex-direction:column; gap:18px; margin-top:44px;}
+.stack-card{position:relative; background:var(--cream); border:1px solid var(--line); border-radius:20px; padding:32px 34px; display:flex; align-items:center; gap:24px; min-width:0;}
+.stack-card__shade{position:absolute; inset:0; border-radius:inherit; background:var(--ink); opacity:0; pointer-events:none;}
+.stack-card .step-num{flex:0 0 auto;}
+.stack-card .body{display:flex; flex-direction:column; gap:6px; min-width:0;}
+.stack-card h3{font-size:19px; font-weight:600; font-family:var(--font-body);}
+.stack-card p{font-size:14.5px; color:var(--muted);}
+@media (min-width:900px){
+  .stack-card{top:calc(90px + var(--i,0)*16px);}
+  html.has-gsap .stack-card{position:sticky;}
+}
+
+/* footer wordmark */
+.foot-wordmark{overflow:hidden; padding-block:8px 0;}
+.foot-wordmark span.fw-char{display:inline-block; will-change:transform;}
+.foot-wordmark h2{font-size:clamp(54px,12vw,160px); font-weight:500; letter-spacing:-.02em; color:var(--gold); opacity:.92; text-align:center; line-height:1;}
+
+@media (hover:none){ .cursor{display:none;} }
 </style>
 
 <a class="skip-link" href="#main">Skip to content</a>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="cursor" id="cursor"><span class="cursor__ring"></span><span class="cursor__dot"></span></div>
 
 <nav id="siteNav">
   <div class="wrap nav-inner">
@@ -291,7 +352,7 @@ footer{background:var(--navy); color:#F0EAD9;}
   <div class="hero-bg"><img src="images/hero-sunset.jpg" alt="" /></div>
   <div class="wrap hero-inner">
     <span class="badge-pill"><span class="dot"></span>Free site assessment · no obligation</span>
-    <h1>Own the sun.<br><em>Engineer</em> your power bill.</h1>
+    <h1 data-lines>Own the sun.<br><em>Engineer</em> your power bill.</h1>
     <p class="lede">Solar and battery systems designed for your roof. See exactly what you'd save — before you commit to anything. Watthaus runs the whole chain: land, design, consents and CEC-certified install.</p>
     <form class="hero-form" id="heroForm">
       <select id="heroRegion" aria-label="Region">
@@ -323,15 +384,29 @@ footer{background:var(--navy); color:#F0EAD9;}
   </div>
 </header>
 
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track" id="marqueeTrack">
+    <span>Residential <em>·</em> Commercial <em>·</em> Land Acquisition <em>·</em> Finance &amp; Partnerships <em>·</em> CEC-Certified <em>·</em> Nationwide NZ <em>·</em></span>
+    <span>Residential <em>·</em> Commercial <em>·</em> Land Acquisition <em>·</em> Finance &amp; Partnerships <em>·</em> CEC-Certified <em>·</em> Nationwide NZ <em>·</em></span>
+  </div>
+</div>
+
 <section id="approach" class="bg-alt">
   <div class="wrap split reveal">
     <div class="split-text">
       <p class="eyebrow">The problem</p>
-      <h2>Most quotes die between the form and the <em>site visit</em>.</h2>
+      <h2 data-lines>Most quotes die between the form and the <em>site visit</em>.</h2>
       <p>Enquiries arrive at every stage — from a first idea to a signed land deal — and usually stall waiting on a handover between separate land, design and install teams. Watthaus runs that whole chain as one accountable team, so nothing goes cold.</p>
       <a class="split-link" href="#process">See the full process →</a>
     </div>
-    <img src="images/install-roof.jpg" alt="Certified installer fitting a rooftop solar panel">
+    <div class="media-frame"><img src="images/install-roof.jpg" alt="Certified installer fitting a rooftop solar panel"></div>
+  </div>
+</section>
+
+<section class="pull-quote">
+  <div class="wrap">
+    <blockquote data-scrub-words>Most installers lose good enquiries somewhere between the first form and the site visit — we built the funnel so homeowners get a clear path from interest to booked assessment.</blockquote>
+    <cite>— The Watthaus approach</cite>
   </div>
 </section>
 
@@ -340,7 +415,7 @@ footer{background:var(--navy); color:#F0EAD9;}
   <div class="wrap calc-wrap">
     <p class="eyebrow">Savings &amp; estimate</p>
     <div class="section-head reveal" style="margin-top:14px;">
-      <h2>What could <em>your</em> roof do?</h2>
+      <h2 data-lines>What could <em>your</em> roof do?</h2>
       <p class="sub muted-navy">Three quick questions and an honest, numbered answer — not a "request a callback" form.</p>
     </div>
 
@@ -502,24 +577,24 @@ footer{background:var(--navy); color:#F0EAD9;}
   <div class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">How it works</p>
-      <h2>From enquiry to <em>certified</em> power in five steps.</h2>
+      <h2 data-lines>From enquiry to <em>certified</em> power in five steps.</h2>
     </div>
-    <div class="steps-row" style="margin-top:44px;">
-      <div class="step-card reveal"><span class="step-num">1</span><h3>Enquire</h3><p>Run the estimate above — two minutes, no call required.</p></div>
-      <div class="step-card reveal"><span class="step-num">2</span><h3>Site visit</h3><p>A specialist confirms roof, shading and switchboard capacity.</p></div>
-      <div class="step-card reveal"><span class="step-num">3</span><h3>Design &amp; consent</h3><p>Engineered layout, lines-company and council approval handled.</p></div>
-      <div class="step-card reveal"><span class="step-num">4</span><h3>Install day</h3><p>Certified crews mount, wire and inspect — usually in a day.</p></div>
-      <div class="step-card reveal"><span class="step-num">5</span><h3>Commission</h3><p>Grid connection signed off. You're making your own power.</p></div>
+    <div class="stack" data-stack>
+      <div class="stack-card" style="--i:0;"><div class="stack-card__shade"></div><span class="step-num">1</span><div class="body"><h3>Enquire</h3><p>Run the estimate above — two minutes, no call required.</p></div></div>
+      <div class="stack-card" style="--i:1;"><div class="stack-card__shade"></div><span class="step-num">2</span><div class="body"><h3>Site visit</h3><p>A specialist confirms roof, shading and switchboard capacity.</p></div></div>
+      <div class="stack-card" style="--i:2;"><div class="stack-card__shade"></div><span class="step-num">3</span><div class="body"><h3>Design &amp; consent</h3><p>Engineered layout, lines-company and council approval handled.</p></div></div>
+      <div class="stack-card" style="--i:3;"><div class="stack-card__shade"></div><span class="step-num">4</span><div class="body"><h3>Install day</h3><p>Certified crews mount, wire and inspect — usually in a day.</p></div></div>
+      <div class="stack-card" style="--i:4;"><div class="stack-card__shade"></div><span class="step-num">5</span><div class="body"><h3>Commission</h3><p>Grid connection signed off. You're making your own power.</p></div></div>
     </div>
   </div>
 </section>
 
 <section class="on-navy">
   <div class="wrap split rev reveal">
-    <img src="images/blueprint.jpg" alt="Hand-drawn architectural plans for a consented build">
+    <div class="media-frame"><img src="images/blueprint.jpg" alt="Hand-drawn architectural plans for a consented build"></div>
     <div class="split-text">
       <p class="eyebrow">Design &amp; consents</p>
-      <h2 style="color:#F0EAD9;">Permits, <em>handled</em> for you.</h2>
+      <h2 data-lines style="color:#F0EAD9;">Permits, <em>handled</em> for you.</h2>
       <p class="muted-navy">Lines-company applications, council consents and engineered design sign-off — we file every document so your install date doesn't move. Land acquisition projects get the same treatment, from first conversation to signed agreement.</p>
       <a class="split-link" href="#estimate" style="color:#F0EAD9; border-color:var(--gold);">Start your estimate →</a>
     </div>
@@ -530,7 +605,7 @@ footer{background:var(--navy); color:#F0EAD9;}
   <div class="wrap">
     <div class="section-head reveal">
       <p class="eyebrow">What we do</p>
-      <h2>Wider than most installers, by <em>design</em>.</h2>
+      <h2 data-lines>Wider than most installers, by <em>design</em>.</h2>
       <p class="sub">Strategic partnerships mean Watthaus can take a project from bare land to switched-on — or just the roof in front of you.</p>
     </div>
     <div class="photo-cards" style="margin-top:40px;">
@@ -564,7 +639,7 @@ footer{background:var(--navy); color:#F0EAD9;}
   <div class="wrap">
     <div class="section-head reveal" style="margin:0 auto; text-align:center;">
       <p class="eyebrow" style="justify-content:center; display:flex;">FAQ</p>
-      <h2>Questions? <em>Straight</em> answers.</h2>
+      <h2 data-lines>Questions? <em>Straight</em> answers.</h2>
     </div>
     <div class="faq-list" style="margin-top:44px;">
       <div class="faq-item reveal">
@@ -594,7 +669,7 @@ footer{background:var(--navy); color:#F0EAD9;}
 <section class="closing">
   <div class="closing-bg"><img src="images/install-roof.jpg" alt=""></div>
   <div class="wrap closing-inner reveal">
-    <h2>Will your roof be ready?</h2>
+    <h2 data-lines>Will your roof be ready?</h2>
     <p>Find out what you'd save — and what you'd stop putting in the air.</p>
     <div class="hero-ctas">
       <a class="btn btn-primary" href="#estimate"><span>Get my free estimate</span></a>
@@ -645,6 +720,7 @@ footer{background:var(--navy); color:#F0EAD9;}
       <a href="https://www.linkedin.com/company/watthaus-strategy-ltd/" target="_blank" rel="noopener">LinkedIn →</a>
     </div>
   </div>
+  <div class="foot-wordmark" aria-hidden="true"><h2 id="footWordmark">WATTHAUS</h2></div>
   <div class="wrap foot-bottom">
     <span>© 2026 Watthaus Strategy Ltd · Estimates are indicative; final figures confirmed after a free site assessment.</span>
     <span>Photography via Pexels · Concept &amp; build — Code Bunny</span>
@@ -655,9 +731,12 @@ footer{background:var(--navy); color:#F0EAD9;}
 <script>
 (function(){
   "use strict";
+  var html = document.documentElement;
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
-  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+  var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !reducedMotion;
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+  if (hasGsap) html.classList.add('has-gsap');
 
   var toggle = document.getElementById('menuToggle');
   var overlay = document.getElementById('overlayMenu');
@@ -680,7 +759,66 @@ footer{background:var(--navy); color:#F0EAD9;}
     });
   });
 
-  if (hasGsap && !reducedMotion){
+  /* ---------- scroll progress + header show/hide ---------- */
+  var navEl = document.getElementById('siteNav');
+  var progressEl = document.getElementById('scrollProgress');
+  var lastY = window.scrollY, navTicking = false;
+  function onScroll(){
+    var y = window.scrollY;
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    progressEl.style.setProperty('--sp', max > 0 ? (y / max).toFixed(4) : 0);
+    if (navEl){
+      var hide = y > 420 && y > lastY + 4 && !overlay.classList.contains('open');
+      if (hide) navEl.classList.add('is-hidden');
+      else if (y < lastY - 4 || y < 420) navEl.classList.remove('is-hidden');
+    }
+    lastY = y;
+    navTicking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!navTicking){ requestAnimationFrame(onScroll); navTicking = true; }
+  }, { passive: true });
+  onScroll();
+
+  /* ---------- word-mask heading split + reveal ---------- */
+  var wordIndex = 0;
+  function splitWords(node){
+    Array.prototype.slice.call(node.childNodes).forEach(function(child){
+      if (child.nodeType === 3){
+        var frag = document.createDocumentFragment();
+        child.textContent.split(/(\s+)/).forEach(function(part){
+          if (!part) return;
+          if (/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(' ')); return; }
+          var w = document.createElement('span'); w.className = 'word';
+          var inner = document.createElement('span'); inner.textContent = part;
+          inner.style.transitionDelay = (wordIndex++ * 0.035) + 's';
+          w.appendChild(inner); frag.appendChild(w);
+        });
+        child.parentNode.replaceChild(frag, child);
+      } else if (child.nodeType === 1){
+        splitWords(child);
+      }
+    });
+  }
+  var headingEls = Array.prototype.slice.call(document.querySelectorAll('[data-lines]'));
+  headingEls.forEach(function(el){
+    wordIndex = 0;
+    var parts = el.innerHTML.split(/<br\s*\/?>/i);
+    el.innerHTML = parts.map(function(p){ return '<span class="line">' + p.trim() + '</span>'; }).join('');
+    el.querySelectorAll('.line').forEach(splitWords);
+    el.classList.add('lines');
+  });
+  if ('IntersectionObserver' in window){
+    var headIO = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('is-in'); headIO.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    headingEls.forEach(function(el){ headIO.observe(el); });
+  } else {
+    headingEls.forEach(function(el){ el.classList.add('is-in'); });
+  }
+  if (reducedMotion) headingEls.forEach(function(el){ el.classList.add('is-in'); });
+
+  if (hasGsap){
     document.documentElement.classList.add('js-anim');
     gsap.utils.toArray('.reveal').forEach(function(el, i){
       gsap.to(el, {
@@ -688,12 +826,141 @@ footer{background:var(--navy); color:#F0EAD9;}
         scrollTrigger: { trigger: el, start: 'top 88%', once: true }
       });
     });
-    gsap.utils.toArray('.photo-card, .step-card, .hl-card, .faq-item').forEach(function(el, i){
-      if (el.classList.contains('reveal')) return;
-      gsap.to(el, { opacity: 1, y: 0, duration: .7, delay: (i % 4) * 0.06, ease: 'power3.out',
-        scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
+    ['.photo-card', '.hl-card', '.faq-item'].forEach(function(sel){
+      var els = gsap.utils.toArray(sel).filter(function(el){ return !el.classList.contains('reveal'); });
+      if (els.length) ScrollTrigger.batch(els, {
+        start: 'top 90%',
+        onEnter: function(batch){ gsap.to(batch, { opacity: 1, y: 0, duration: .7, stagger: .08, ease: 'power3.out', overwrite: true }); }
+      });
     });
   }
+
+  /* ---------- custom cursor + magnetic buttons ---------- */
+  if (finePointer && !reducedMotion){
+    html.classList.add('has-cursor');
+    var cursor = document.getElementById('cursor');
+    var ring = cursor.querySelector('.cursor__ring');
+    var dot = cursor.querySelector('.cursor__dot');
+    var mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my;
+    window.addEventListener('mousemove', function(e){
+      mx = e.clientX; my = e.clientY;
+      if (!cursor.classList.contains('is-ready')){ rx = mx; ry = my; cursor.classList.add('is-ready'); }
+      cursor.classList.remove('is-hidden');
+    }, { passive: true });
+    document.addEventListener('mouseleave', function(){ cursor.classList.add('is-hidden'); });
+    window.addEventListener('mousedown', function(){ cursor.classList.add('is-down'); });
+    window.addEventListener('mouseup', function(){ cursor.classList.remove('is-down'); });
+    (function follow(){
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)';
+      ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
+      requestAnimationFrame(follow);
+    })();
+    document.addEventListener('mouseover', function(e){
+      var hov = e.target.closest('a, button, .photo-card, .stack-card, input, select, label');
+      cursor.classList.toggle('is-hover', !!hov);
+    });
+    if (hasGsap){
+      document.querySelectorAll('.btn').forEach(function(el){
+        var qx = gsap.quickTo(el, 'x', { duration: .5, ease: 'power3.out' });
+        var qy = gsap.quickTo(el, 'y', { duration: .5, ease: 'power3.out' });
+        el.addEventListener('mousemove', function(e){
+          var r = el.getBoundingClientRect();
+          qx((e.clientX - (r.left + r.width/2)) * 0.28);
+          qy((e.clientY - (r.top + r.height/2)) * 0.28);
+        });
+        el.addEventListener('mouseleave', function(){
+          gsap.to(el, { x: 0, y: 0, duration: 1, ease: 'elastic.out(1, 0.4)' });
+        });
+      });
+    }
+  }
+
+  /* ---------- velocity-aware marquee ---------- */
+  (function(){
+    var track = document.getElementById('marqueeTrack');
+    if (!track) return;
+    var scrollY = window.scrollY, velocity = 0, direction = 1, x = 0;
+    (function sampleVelocity(){
+      var y = window.scrollY, d = y - scrollY;
+      velocity += (d - velocity) * 0.2;
+      if (Math.abs(d) > 0.5) direction = d > 0 ? 1 : -1;
+      scrollY = y;
+      requestAnimationFrame(sampleVelocity);
+    })();
+    if (reducedMotion){ return; }
+    (function loop(){
+      var speed = 0.5 + Math.min(Math.abs(velocity) * 0.3, 16);
+      x -= speed * direction;
+      var half = track.scrollWidth / 2;
+      if (half > 0){ if (x <= -half) x += half; if (x > 0) x -= half; }
+      track.style.transform = 'translate3d(' + x.toFixed(2) + 'px,0,0)';
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  /* ---------- pull-quote word-by-word scrub ---------- */
+  if (hasGsap){
+    document.querySelectorAll('[data-scrub-words]').forEach(function(el){
+      var text = el.textContent;
+      el.innerHTML = text.split(/(\s+)/).map(function(w){
+        return /^\s+$/.test(w) ? w : '<span class="sw">' + w + '</span>';
+      }).join('');
+      gsap.to(el.querySelectorAll('.sw'), {
+        opacity: 1, stagger: 0.06, ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: 0.6 }
+      });
+    });
+  }
+
+  /* ---------- hero + closing photo parallax ---------- */
+  if (hasGsap){
+    document.querySelectorAll('.hero-bg img, .closing-bg img, .calc-photo img').forEach(function(img){
+      gsap.fromTo(img, { yPercent: -6, scale: 1.12 }, {
+        yPercent: 6, scale: 1.12, ease: 'none',
+        scrollTrigger: { trigger: img.closest('header, section'), start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+    });
+    var heroContent = document.querySelector('.hero-inner');
+    if (heroContent){
+      gsap.to(heroContent, { yPercent: -12, opacity: 0.2, ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    }
+    document.querySelectorAll('.media-frame img, .photo-card img').forEach(function(img){
+      gsap.fromTo(img, { yPercent: -5, scale: 1.1 }, {
+        yPercent: 5, scale: 1.1, ease: 'none',
+        scrollTrigger: { trigger: img.closest('.media-frame, .photo-card'), start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+    });
+  }
+
+  /* ---------- stacking process cards (desktop) ---------- */
+  if (hasGsap && window.innerWidth >= 900){
+    var stackCards = gsap.utils.toArray('[data-stack] .stack-card');
+    stackCards.forEach(function(card, i){
+      var next = stackCards[i + 1];
+      if (!next) return;
+      var endPx = 'top ' + (90 + (i + 1) * 16) + 'px';
+      gsap.to(card, { scale: 0.96, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: endPx, scrub: true } });
+      gsap.to(card.querySelector('.stack-card__shade'), { opacity: 0.12, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: endPx, scrub: true } });
+    });
+  }
+
+  /* ---------- footer wordmark rise ---------- */
+  if (hasGsap){
+    var wm = document.getElementById('footWordmark');
+    if (wm){
+      wm.innerHTML = wm.textContent.split('').map(function(ch){
+        return ch === ' ' ? ' ' : '<span class="fw-char">' + ch + '</span>';
+      }).join('');
+      gsap.from(wm.querySelectorAll('.fw-char'), {
+        yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: 0.035,
+        scrollTrigger: { trigger: wm, start: 'top 95%' }
+      });
+    }
+  }
+
+  window.addEventListener('load', function(){ if (hasGsap) ScrollTrigger.refresh(); });
 
   /* count-up stat card */
   (function(){

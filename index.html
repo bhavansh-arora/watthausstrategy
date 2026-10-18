@@ -2,311 +2,373 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
-/* Layout: blueprint grid — paper sections ruled like a solar-array schematic; five Bauhaus-block stations mark the enquiry-to-install funnel */
+/* Layout: editorial chapters (01–07) on a cinematic golden-hour canvas — the estimate tool sits where a portfolio would put "Investment" */
 :root{
-  --bg:#EDEFE7; --surface:#FFFFFF; --ink:#12161C; --muted:#52585F;
-  --sun:#F5B400; --circuit:#0B5D52; --signal:#C8402A; --line:rgba(18,22,28,.14);
-  --font-display:'Unbounded',system-ui,sans-serif;
+  --bg:#15110D; --surface:#1E1813; --surface-2:#241C15; --ink:#F3ECDF; --muted:#B8AC98;
+  --gold:#E8B04B; --rust:#C9674A; --pine:#7CA077; --line:rgba(243,236,223,.14);
+  --font-display:'Instrument Serif',Georgia,serif;
   --font-body:'Work Sans',system-ui,sans-serif;
   --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#0B0D10; --surface:#15181C; --ink:#EEEDE4; --muted:#9BA1A6;
-    --sun:#FFC933; --circuit:#2FA592; --signal:#E8604A; --line:rgba(238,237,228,.16);
-    color-scheme:dark;
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#F2EEE3; --surface:#FFFFFF; --surface-2:#EAE4D4; --ink:#1C1712; --muted:#6B6153;
+    --gold:#B9790C; --rust:#A84A32; --pine:#3F6A47; --line:rgba(28,23,18,.16);
+    color-scheme:light;
   }
 }
-:root[data-theme="dark"]{
-  --bg:#0B0D10; --surface:#15181C; --ink:#EEEDE4; --muted:#9BA1A6;
-  --sun:#FFC933; --circuit:#2FA592; --signal:#E8604A; --line:rgba(238,237,228,.16);
-  color-scheme:dark;
+:root[data-theme="light"]{
+  --bg:#F2EEE3; --surface:#FFFFFF; --surface-2:#EAE4D4; --ink:#1C1712; --muted:#6B6153;
+  --gold:#B9790C; --rust:#A84A32; --pine:#3F6A47; --line:rgba(28,23,18,.16);
+  color-scheme:light;
 }
 
 *{box-sizing:border-box;}
+html,body{background:var(--bg);}
 body{
-  background:var(--bg); color:var(--ink); font-family:var(--font-body);
+  color:var(--ink); font-family:var(--font-body); font-size:16px;
   padding-left:max(16px, env(safe-area-inset-left,0px));
   padding-right:max(16px, env(safe-area-inset-right,0px));
+  overflow-x:hidden;
 }
-body::before{
-  content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px);
-  z-index:40; background:var(--bg);
-}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:50; background:var(--bg);}
+.skip-link{position:absolute; left:-9999px; top:0; background:var(--gold); color:#15110D; padding:10px 16px; z-index:100;}
+.skip-link:focus{left:max(16px,env(safe-area-inset-left,0px));}
 .wrap{max-width:1180px; margin:0 auto;}
-h1,h2,h3{font-family:var(--font-display); line-height:1.02; text-wrap:balance; margin:0; letter-spacing:-.01em;}
-p{line-height:1.6; margin:0;}
-a{color:inherit;}
-.mono{font-family:var(--font-mono); letter-spacing:.02em;}
+h1,h2,h3{font-family:var(--font-display); font-weight:400; line-height:1.04; text-wrap:balance; margin:0;}
+em,i{font-family:var(--font-display); font-style:italic; color:var(--gold);}
+p{line-height:1.65; margin:0;}
+a{color:inherit; text-decoration:none;}
+.mono{font-family:var(--font-mono);}
 .eyebrow{
-  font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--circuit); font-weight:600;
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--gold); font-weight:600; display:flex; align-items:center; gap:10px;
 }
-:root[data-theme="dark"] .eyebrow, @media (prefers-color-scheme:dark){ }
+.eyebrow::before{content:""; width:16px; height:1px; background:var(--gold);}
 
-/* ---------- Nav ---------- */
-nav{
-  position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
-  background:var(--bg); border-bottom:1px solid var(--line);
+/* ---------- utility bar + nav ---------- */
+.utility-bar{border-bottom:1px solid var(--line); background:var(--bg);}
+.utility-inner{display:flex; justify-content:space-between; align-items:center; padding-block:9px; font-family:var(--font-mono); font-size:11.5px; color:var(--muted); gap:16px; flex-wrap:wrap;}
+.utility-inner span{white-space:nowrap;}
+nav{position:sticky; top:env(safe-area-inset-top,0px); z-index:40; background:var(--bg); border-bottom:1px solid var(--line);}
+.nav-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px;}
+.logo{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-size:23px;}
+.logo-mark{width:24px; height:24px; flex:0 0 auto;}
+.nav-links{display:flex; align-items:center; gap:30px; font-size:14px;}
+.nav-links a:not(.btn){opacity:.82; position:relative;}
+.nav-links a:not(.btn):hover{opacity:1;}
+.nav-links a:not(.btn)::after{content:""; position:absolute; left:0; right:0; bottom:-6px; height:1px; background:var(--gold); transform:scaleX(0); transition:transform .25s;}
+.nav-links a:not(.btn):hover::after{transform:scaleX(1);}
+.menu-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:8px;}
+.menu-toggle span{width:22px; height:1.5px; background:var(--ink);}
+
+.btn{font-family:var(--font-mono); font-size:12.5px; letter-spacing:.04em; border:none; cursor:pointer; padding:13px 22px; display:inline-flex; align-items:center; gap:8px; text-transform:uppercase;}
+.btn-primary{background:var(--gold); color:#15110D;}
+.btn-primary:hover{filter:brightness(1.08);}
+.btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--line);}
+.btn-ghost:hover{border-color:var(--gold); color:var(--gold);}
+.btn:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, button:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+
+/* ---------- mobile overlay menu ---------- */
+.overlay-menu{position:fixed; inset:0; z-index:60; background:var(--bg); display:flex; flex-direction:column; justify-content:center; padding:48px max(16px,env(safe-area-inset-left,0px)); opacity:0; visibility:hidden; transition:opacity .3s;}
+.overlay-menu.open{opacity:1; visibility:visible;}
+.overlay-close{position:absolute; top:max(24px,env(safe-area-inset-top,0px)); right:max(20px,env(safe-area-inset-right,0px)); background:none; border:none; color:var(--ink); font-family:var(--font-mono); font-size:13px; cursor:pointer;}
+.overlay-list{display:flex; flex-direction:column; gap:18px; list-style:none; margin:0; padding:0;}
+.overlay-list a{font-family:var(--font-display); font-size:clamp(32px,9vw,52px); display:flex; align-items:baseline; gap:16px;}
+.overlay-list .n{font-family:var(--font-mono); font-size:13px; color:var(--gold);}
+
+/* ---------- hero ---------- */
+.hero{padding-block:56px 72px; border-bottom:1px solid var(--line); position:relative;}
+.hero-grid{display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center;}
+.hero h1{font-size:clamp(42px,6.4vw,84px); font-weight:400;}
+.hero p.lede{font-size:18px; color:var(--muted); max-width:46ch; margin-top:22px;}
+.hero-ctas{display:flex; gap:14px; margin-top:34px; flex-wrap:wrap;}
+.hero-counter{display:flex; align-items:center; gap:14px; margin-top:40px; font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+.hero-counter .num{color:var(--ink); font-size:14px;}
+.hero-counter .rule{width:60px; height:1px; background:var(--line);}
+
+.collage{position:relative; display:grid; grid-template-columns:1.1fr .9fr; gap:14px;}
+.photo-panel{position:relative; border-radius:2px; overflow:hidden; isolation:isolate;}
+.photo-panel .grain{position:absolute; inset:0; opacity:.07; background-image:repeating-radial-gradient(circle at 1px 1px, #000 0, transparent 1px); background-size:3px 3px; mix-blend-mode:overlay; pointer-events:none;}
+.photo-panel .tag{position:absolute; left:12px; bottom:12px; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#fff; background:rgba(21,17,13,.55); padding:6px 10px; backdrop-filter:blur(2px);}
+.p-roofline{grid-row:span 2; aspect-ratio:3/4; background:linear-gradient(180deg,#2B2118 0%, #7A4A28 45%, #D98A3C 72%, #E8B04B 100%);}
+.p-roofline svg{position:absolute; bottom:0; left:0; width:100%; height:48%;}
+.p-cells{aspect-ratio:4/3; background:linear-gradient(135deg,#1E1813 0%, #3A2E1E 60%, #7A5A2C 100%); display:grid; grid-template-columns:repeat(5,1fr); grid-template-rows:repeat(4,1fr); gap:2px; padding:10px;}
+.p-cells div{background:rgba(232,176,75,.16); border:1px solid rgba(232,176,75,.3);}
+.p-land{aspect-ratio:4/3; background:repeating-linear-gradient(100deg, #3F6A47 0 22px, #58824F 22px 44px, #B9790C 44px 50px);}
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;}
+  .collage{order:-1;}
+  .p-roofline{aspect-ratio:16/9; grid-row:auto;}
 }
-.nav-inner{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding-block:16px;
-}
-.logo{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:800; font-size:19px;}
-.logo-mark{width:26px; height:26px; flex:0 0 auto;}
-.nav-links{display:flex; align-items:center; gap:28px; font-size:14px; font-weight:500;}
-.nav-links a{text-decoration:none; opacity:.78;}
-.nav-links a:hover{opacity:1;}
-.btn{
-  font-family:var(--font-body); font-weight:700; font-size:14px; border:none; cursor:pointer;
-  padding:12px 22px; border-radius:2px; display:inline-flex; align-items:center; gap:8px;
-}
-.btn-primary{background:var(--sun); color:var(--ink);}
-.btn-primary:hover{filter:brightness(0.95);}
-.btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--ink);}
-.btn-ghost:hover{background:var(--ink); color:var(--bg);}
-.btn:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible{outline:2.5px solid var(--circuit); outline-offset:2px;}
 
-/* ---------- Hero ---------- */
-.hero{padding-block:64px 48px; border-bottom:1px solid var(--line);}
-.hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center;}
-.hero h1{font-size:clamp(40px,6vw,74px); font-weight:800;}
-.hero .accent{color:var(--sun); -webkit-text-stroke:1.5px var(--ink); text-stroke:1.5px var(--ink);}
-.hero p.lede{font-size:18px; color:var(--muted); max-width:46ch; margin-top:18px;}
-.hero-ctas{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap;}
-.hero-art{position:relative;}
-.rays{animation:spin 40s linear infinite;}
-@media (prefers-reduced-motion:reduce){.rays{animation:none;}}
-@keyframes spin{to{transform:rotate(360deg);}}
+/* ---------- marquee ---------- */
+.marquee{border-bottom:1px solid var(--line); background:var(--surface); overflow:hidden; padding-block:22px;}
+.marquee-track{display:flex; gap:40px; white-space:nowrap; animation:scroll 28s linear infinite;}
+.marquee-track span{font-family:var(--font-display); font-size:24px; color:var(--muted); display:flex; align-items:center; gap:40px;}
+.marquee-track span em{color:var(--gold);}
+@keyframes scroll{from{transform:translateX(0);} to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion:reduce){.marquee-track{animation:none;} .rays{animation:none !important;}}
 
-/* ---------- Trust strip ---------- */
-.strip{border-bottom:1px solid var(--line); background:var(--surface);}
-.strip-inner{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding-block:28px;}
-.strip-item{display:flex; flex-direction:column; gap:4px; min-width:0;}
-.strip-item .big{font-family:var(--font-mono); font-size:16px; font-weight:600; color:var(--circuit);}
-.strip-item .small{font-size:13px; color:var(--muted);}
+/* ---------- sections ---------- */
+section{padding-block:88px;}
+.section-head{max-width:620px; margin-bottom:44px;}
+.section-head h2{font-size:clamp(30px,4.4vw,46px); margin-top:14px;}
+.section-head p.sub{color:var(--muted); margin-top:16px; font-size:16.5px;}
 
-/* ---------- Section shells ---------- */
-section{padding-block:72px;}
-.section-head{max-width:640px; margin-bottom:40px;}
-.section-head h2{font-size:clamp(28px,4vw,42px); margin-top:10px;}
-.section-head p{color:var(--muted); margin-top:14px; font-size:16px;}
+.tags{display:flex; gap:10px; flex-wrap:wrap; margin-top:28px;}
+.tag-chip{font-family:var(--font-mono); font-size:12px; letter-spacing:.04em; text-transform:uppercase; border:1px solid var(--line); padding:9px 14px; color:var(--muted);}
 
-/* ---------- Process timeline ---------- */
-.timeline{display:grid; grid-template-columns:repeat(5,1fr); gap:0; border:1px solid var(--line);}
-.tl-step{
-  padding:26px 20px; border-right:1px solid var(--line); min-width:0; display:flex; flex-direction:column; gap:10px;
-  background:var(--surface);
-}
-.tl-step:last-child{border-right:none;}
-.tl-num{font-family:var(--font-mono); font-size:13px; color:var(--sun); font-weight:600; background:var(--ink); color:var(--bg); width:28px; height:28px; display:flex; align-items:center; justify-content:center;}
-.tl-step h3{font-size:16px; font-weight:700;}
-.tl-step p{font-size:13.5px; color:var(--muted);}
+.twocol{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+.feature-card{border:1px solid var(--line); padding:34px; display:flex; flex-direction:column; gap:16px; background:var(--surface); min-width:0;}
+.feature-card .n{font-family:var(--font-mono); font-size:12px; color:var(--gold);}
+.feature-card h3{font-size:28px;}
+.feature-card p{color:var(--muted); font-size:15px;}
+.feature-card .swatch{height:120px; border-radius:2px;}
+.swatch-1{background:linear-gradient(135deg,#7A4A28,#E8B04B);}
+.swatch-2{background:linear-gradient(135deg,#3F6A47,#B9790C);}
 
-/* ---------- Wizard ---------- */
-.wizard-section{background:var(--ink); color:var(--bg); border-bottom:1px solid var(--line);}
-.wizard-section .eyebrow{color:var(--sun);}
-.wizard-section .section-head p{color:#ffffffb0;}
-:root[data-theme="light"] .wizard-section .section-head p, .wizard-section .section-head p{color:rgba(238,237,228,.72);}
-.wizard{
-  background:var(--bg); color:var(--ink); border:1px solid var(--line);
-  display:grid; grid-template-columns:1fr; overflow:hidden;
-}
+.stats-strip{border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--surface);}
+.stats-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding-block:34px;}
+.stat{display:flex; flex-direction:column; gap:6px; min-width:0;}
+.stat .v{font-family:var(--font-display); font-size:30px; color:var(--gold);}
+.stat .l{font-size:13px; color:var(--muted);}
+
+.projects-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+.project-card{position:relative; border:1px solid var(--line); overflow:hidden;}
+.project-card .img{aspect-ratio:4/5; position:relative;}
+.project-card .img .grain{position:absolute; inset:0; opacity:.07; background-image:repeating-radial-gradient(circle at 1px 1px, #000 0, transparent 1px); background-size:3px 3px; mix-blend-mode:overlay;}
+.proj-1 .img{background:linear-gradient(160deg,#2B2118,#C9674A);}
+.proj-2 .img{background:linear-gradient(160deg,#1E1813,#7CA077);}
+.proj-3 .img{background:linear-gradient(160deg,#241C15,#E8B04B);}
+.project-card .cap{padding:16px 18px; display:flex; justify-content:space-between; align-items:baseline; gap:10px;}
+.project-card .cap h3{font-size:19px;}
+.project-card .cap span{font-family:var(--font-mono); font-size:11.5px; color:var(--muted);}
+.project-card .reveal{position:absolute; top:14px; right:14px; font-family:var(--font-mono); font-size:11px; color:#fff; background:rgba(21,17,13,.55); padding:6px 10px; opacity:0; transform:translateY(-4px); transition:opacity .2s, transform .2s;}
+.project-card:hover .reveal{opacity:1; transform:translateY(0);}
+
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+.step{border-top:1px solid var(--line); padding-top:22px; display:flex; flex-direction:column; gap:12px; min-width:0;}
+.step .n{font-family:var(--font-display); font-size:40px; color:var(--gold);}
+.step h3{font-size:20px;}
+.step p{color:var(--muted); font-size:14.5px;}
+
+.why-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+.why-item{display:flex; flex-direction:column; gap:14px;}
+.why-item .mark{width:38px; height:38px;}
+.why-item h3{font-size:19px; font-family:var(--font-body); font-weight:600;}
+.why-item p{color:var(--muted); font-size:14.5px;}
+
+.coverage-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+.cov-card{border:1px solid var(--line); padding:20px; display:flex; flex-direction:column; gap:28px; min-height:140px; justify-content:space-between; position:relative; overflow:hidden; min-width:0;}
+.cov-card::before{content:""; position:absolute; inset:0; opacity:.5;}
+.cov-1::before{background:linear-gradient(160deg,transparent,#E8B04B22);}
+.cov-2::before{background:linear-gradient(160deg,transparent,#C9674A22);}
+.cov-3::before{background:linear-gradient(160deg,transparent,#7CA07722);}
+.cov-4::before{background:linear-gradient(160deg,transparent,#E8B04B22);}
+.cov-card .city{font-family:var(--font-display); font-size:22px; position:relative;}
+.cov-card .sun{font-family:var(--font-mono); font-size:12px; color:var(--muted); position:relative;}
+
+.closing{text-align:center; border-top:1px solid var(--line); padding-block:96px;}
+.closing h2{font-size:clamp(38px,7vw,68px); max-width:16ch; margin:0 auto;}
+.closing .hero-ctas{justify-content:center; margin-top:34px;}
+
+/* ---------- wizard (02) ---------- */
+.wizard{border:1px solid var(--line); background:var(--surface); display:grid; overflow:hidden;}
 .wizard-progress{display:grid; grid-template-columns:repeat(5,1fr); border-bottom:1px solid var(--line);}
-.wp-step{padding:14px 10px; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; text-align:center; color:var(--muted); border-right:1px solid var(--line); background:var(--surface); transition:background .2s,color .2s;}
+.wp-step{padding:14px 10px; font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; text-align:center; color:var(--muted); border-right:1px solid var(--line); transition:background .2s,color .2s;}
 .wp-step:last-child{border-right:none;}
-.wp-step.active{background:var(--sun); color:var(--ink); font-weight:700;}
-.wp-step.done{background:var(--circuit); color:#fff;}
-.wizard-body{padding:40px; min-height:360px; display:flex; flex-direction:column; gap:26px;}
-.wiz-pane{display:none; flex-direction:column; gap:22px;}
+.wp-step.active{background:var(--gold); color:#15110D; font-weight:700;}
+.wp-step.done{background:var(--pine); color:#0e140e;}
+.wizard-body{padding:44px; min-height:380px; display:flex; flex-direction:column; gap:28px;}
+.wiz-pane{display:none; flex-direction:column; gap:24px;}
 .wiz-pane.active{display:flex;}
-.wiz-pane h3{font-size:22px; font-weight:700;}
+.wiz-pane h3{font-size:28px; font-family:var(--font-display);}
 .field-row{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
 .field{display:flex; flex-direction:column; gap:8px; min-width:0;}
-.field label{font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);}
-.field select, .field input[type=text], .field input[type=email], .field input[type=tel], .field input[type=number]{
-  font-family:var(--font-body); font-size:15px; padding:13px 14px; border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
-  border-radius:2px; width:100%;
+.field label{font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted);}
+.field select, .field input[type=text], .field input[type=email], .field input[type=tel]{
+  font-family:var(--font-body); font-size:15px; padding:13px 14px; border:1px solid var(--line); background:var(--bg); color:var(--ink); width:100%;
 }
-.field select:focus, .field input:focus{border-color:var(--circuit);}
+.field select:focus, .field input:focus{border-color:var(--gold);}
 .bill-row{display:flex; align-items:center; gap:18px;}
-input[type=range]{flex:1; accent-color:var(--circuit); min-width:0;}
-.bill-readout{font-family:var(--font-mono); font-size:22px; font-weight:600; min-width:92px; color:var(--circuit); flex:0 0 auto;}
+input[type=range]{flex:1; accent-color:var(--gold); min-width:0;}
+.bill-readout{font-family:var(--font-mono); font-size:24px; min-width:92px; color:var(--gold); flex:0 0 auto;}
 .toggle-row{display:flex; align-items:center; gap:12px;}
 .toggle{position:relative; width:46px; height:26px; flex:0 0 auto;}
 .toggle input{position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer;}
 .toggle .track{position:absolute; inset:0; background:var(--line); border-radius:999px; transition:background .2s;}
-.toggle .thumb{position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:var(--surface); border:1.5px solid var(--muted); transition:left .2s;}
-.toggle input:checked + .track{background:var(--circuit);}
-.toggle input:checked ~ .thumb{left:23px; border-color:var(--circuit);}
+.toggle .thumb{position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:var(--surface-2); border:1px solid var(--muted); transition:left .2s;}
+.toggle input:checked + .track{background:var(--pine);}
+.toggle input:checked ~ .thumb{left:23px; border-color:var(--pine);}
 .wiz-actions{display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px;}
-.err{font-size:13px; color:var(--signal); min-height:18px;}
+.err{font-size:13px; color:var(--rust); min-height:18px; font-family:var(--font-mono);}
 
 .results-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
-.result-tile{background:var(--surface); padding:22px 18px; display:flex; flex-direction:column; gap:6px; min-width:0;}
-.result-tile .label{font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted);}
-.result-tile .value{font-family:var(--font-mono); font-size:30px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--circuit);}
-.result-tile.hi .value{color:var(--sun); -webkit-text-stroke:.6px var(--ink);}
+.result-tile{background:var(--surface); padding:24px 18px; display:flex; flex-direction:column; gap:8px; min-width:0;}
+.result-tile .label{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted);}
+.result-tile .value{font-family:var(--font-display); font-size:32px; color:var(--pine);}
+.result-tile.hi .value{color:var(--gold);}
 .result-note{font-size:13px; color:var(--muted);}
-.result-cta{display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); padding:20px 22px;}
-
+.result-cta{display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; background:var(--surface-2); border:1px solid var(--line); padding:22px;}
 .success{display:flex; flex-direction:column; gap:14px; align-items:flex-start;}
-.success .tag{background:var(--circuit); color:#fff; font-family:var(--font-mono); font-size:12px; padding:6px 10px; letter-spacing:.06em;}
-.success h3{font-size:24px;}
+.success .tag{background:var(--pine); color:#0e140e; font-family:var(--font-mono); font-size:12px; padding:6px 10px; letter-spacing:.06em;}
+.success h3{font-size:30px;}
 
-/* ---------- Services ---------- */
-.services{display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:auto auto; gap:14px;}
-.svc{border:1px solid var(--line); background:var(--surface); padding:26px 22px; display:flex; flex-direction:column; gap:12px; min-width:0;}
-.svc .num{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
-.svc h3{font-size:18px; font-weight:700;}
-.svc p{font-size:14px; color:var(--muted);}
-.svc.lead{grid-column:span 2; grid-row:span 2; background:var(--circuit); color:#fff; justify-content:space-between;}
-.svc.lead .num{color:#ffffffa0;}
-.svc.lead p{color:#ffffffcc;}
-.svc.accent{background:var(--sun);}
-.svc.accent p, .svc.accent .num{color:rgba(18,22,28,.68);}
-
-/* ---------- Coverage ---------- */
-.coverage{display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center;}
-.spine{display:flex; flex-direction:column; align-items:stretch; position:relative; padding-left:28px;}
-.spine::before{content:""; position:absolute; left:9px; top:6px; bottom:6px; width:2px; background:var(--line);}
-.node{display:flex; align-items:center; gap:14px; padding-block:11px; position:relative;}
-.node::before{content:""; position:absolute; left:-28px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:var(--sun); border:2px solid var(--ink); z-index:1;}
-:root[data-theme="dark"] .node::before{border-color:var(--bg);}
-.node .city{font-weight:700; font-size:15px;}
-.node .sun{font-family:var(--font-mono); font-size:13px; color:var(--muted);}
-
-/* ---------- Footer ---------- */
+/* ---------- footer ---------- */
 footer{border-top:1px solid var(--line); background:var(--surface);}
-.foot-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:48px; padding-block:56px;}
-.contact-card{background:var(--ink); color:var(--bg); padding:34px; border:1px solid var(--line);}
-.contact-card .role{font-family:var(--font-mono); font-size:12.5px; color:var(--sun); text-transform:uppercase; letter-spacing:.06em;}
-.contact-card h3{font-size:24px; margin-top:8px;}
-.contact-card .co{color:rgba(238,237,228,.72); margin-top:2px; font-size:14px;}
-.contact-rows{display:flex; flex-direction:column; gap:12px; margin-top:22px;}
-.contact-row{display:flex; align-items:center; gap:12px; justify-content:space-between; border-top:1px solid rgba(238,237,228,.14); padding-top:12px;}
-.contact-row .v{font-family:var(--font-mono); font-size:14px; word-break:break-word;}
-.copy-btn{
-  font-family:var(--font-mono); font-size:11.5px; background:transparent; border:1px solid rgba(238,237,228,.4);
-  color:var(--bg); padding:6px 10px; cursor:pointer; flex:0 0 auto; border-radius:2px;
-}
-.copy-btn:hover{background:rgba(238,237,228,.14);}
-.foot-right{display:flex; flex-direction:column; gap:22px;}
-.foot-right .logo{font-size:22px;}
+.foot-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:48px; padding-block:64px;}
+.contact-card{background:var(--bg); color:var(--ink); padding:36px; border:1px solid var(--line);}
+.contact-card .role{font-family:var(--font-mono); font-size:12px; color:var(--gold); text-transform:uppercase; letter-spacing:.05em;}
+.contact-card h3{font-size:30px; margin-top:10px; font-family:var(--font-display);}
+.contact-card .co{color:var(--muted); margin-top:2px; font-size:14px;}
+.contact-rows{display:flex; flex-direction:column; gap:12px; margin-top:24px;}
+.contact-row{display:flex; align-items:center; gap:12px; justify-content:space-between; border-top:1px solid var(--line); padding-top:12px;}
+.contact-row .v{font-family:var(--font-mono); font-size:13.5px; word-break:break-word;}
+.copy-btn{font-family:var(--font-mono); font-size:11px; background:transparent; border:1px solid var(--line); color:var(--ink); padding:6px 10px; cursor:pointer; flex:0 0 auto;}
+.copy-btn:hover{border-color:var(--gold); color:var(--gold);}
+.foot-right{display:flex; flex-direction:column; gap:24px;}
+.foot-right .logo{font-size:24px;}
 .foot-right p{color:var(--muted); font-size:14px; max-width:40ch;}
-.foot-links{display:flex; gap:20px; flex-wrap:wrap; font-size:13.5px;}
-.foot-links a{text-decoration:underline; opacity:.8;}
+.foot-cols{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+.foot-col{display:flex; flex-direction:column; gap:10px; font-size:14px;}
+.foot-col .h{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin-bottom:6px;}
+.foot-col a{opacity:.85;}
+.foot-col a:hover{opacity:1; color:var(--gold);}
 .credit{border-top:1px solid var(--line); padding-block:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
-.credit p{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+.credit p{font-family:var(--font-mono); font-size:11.5px; color:var(--muted);}
+.back-top{font-family:var(--font-mono); font-size:11.5px; color:var(--muted); display:flex; align-items:center; gap:6px;}
+.back-top:hover{color:var(--gold);}
 
-/* ---------- Responsive ---------- */
+/* ---------- responsive ---------- */
 @media (max-width:900px){
-  .hero-grid{grid-template-columns:1fr;}
-  .hero-art{order:-1; max-width:260px;}
-  .strip-inner{grid-template-columns:repeat(2,1fr);}
-  .timeline{grid-template-columns:1fr; }
-  .tl-step{border-right:none; border-bottom:1px solid var(--line);}
+  .nav-links{display:none;}
+  .menu-toggle{display:flex;}
+  .twocol, .projects-grid, .why-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .steps{grid-template-columns:1fr;}
+  .coverage-grid{grid-template-columns:repeat(2,1fr);}
   .field-row{grid-template-columns:1fr;}
   .results-grid{grid-template-columns:repeat(2,1fr);}
-  .services{grid-template-columns:1fr 1fr;}
-  .svc.lead{grid-column:span 2; grid-row:auto;}
-  .coverage{grid-template-columns:1fr;}
   .foot-grid{grid-template-columns:1fr;}
-  nav .nav-links a:not(.btn){display:none;}
+  .foot-cols{grid-template-columns:1fr 1fr;}
 }
 @media (max-width:560px){
-  .wizard-body{padding:24px 18px;}
-  .services{grid-template-columns:1fr;}
-  .svc.lead{grid-column:1; }
+  .wizard-body{padding:26px 18px;}
   .results-grid{grid-template-columns:1fr 1fr;}
-  .wp-step{font-size:9.5px; padding:12px 4px;}
+  .wp-step{font-size:9px; padding:12px 3px;}
+  .utility-inner span:nth-child(2){display:none;}
 }
 </style>
 
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="utility-bar">
+  <div class="wrap utility-inner">
+    <span>Aotearoa New Zealand · Land to grid</span>
+    <span>+64 22 646 1996</span>
+    <span>anjana@watthausstrategy.co.nz</span>
+  </div>
+</div>
+
 <nav>
   <div class="wrap nav-inner">
-    <div class="logo">
-      <svg class="logo-mark" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" fill="var(--ink)"/><path d="M13 4L21 13L13 22L5 13L13 4Z" fill="var(--sun)"/></svg>
-      WATTHAUS
-    </div>
+    <a class="logo" href="#main">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none"><path d="M12 2L21 12L12 22L3 12L12 2Z" fill="var(--gold)"/></svg>
+      Watthaus
+    </a>
     <div class="nav-links">
-      <a href="#how">How it works</a>
+      <a href="#approach">Approach</a>
+      <a href="#estimate">Estimate</a>
       <a href="#services">Services</a>
+      <a href="#process">Process</a>
       <a href="#coverage">Coverage</a>
-      <a href="#contact">Contact</a>
-      <a class="btn btn-primary" href="#wizard">Get your estimate</a>
+      <a class="btn btn-primary" href="#estimate">Get your estimate</a>
     </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
 
+<div class="overlay-menu" id="overlayMenu">
+  <button class="overlay-close" id="overlayClose">Close ✕</button>
+  <ul class="overlay-list">
+    <li><a href="#approach"><span class="n">01</span>Approach</a></li>
+    <li><a href="#estimate"><span class="n">02</span>Estimate</a></li>
+    <li><a href="#services"><span class="n">03</span>Services</a></li>
+    <li><a href="#projects"><span class="n">04</span>Projects</a></li>
+    <li><a href="#process"><span class="n">05</span>Process</a></li>
+    <li><a href="#coverage"><span class="n">07</span>Coverage</a></li>
+    <li><a href="#contact"><span class="n">—</span>Contact</a></li>
+  </ul>
+</div>
+
+<main id="main">
 <header class="hero">
   <div class="wrap hero-grid">
     <div>
-      <p class="eyebrow">Solar strategy &amp; delivery · Aotearoa New Zealand</p>
-      <h1>From paddock to <span class="accent">power</span>, signed off and switched on.</h1>
-      <p class="lede">Watthaus runs the whole chain — land acquisition, design, consents and CEC-certified installation — so an enquiry becomes a booked site visit instead of a cold lead.</p>
+      <p class="eyebrow">Solar strategy &amp; delivery, Aotearoa New Zealand</p>
+      <h1>Clean power,<br><em>engineered</em> to last.</h1>
+      <p class="lede">Watthaus runs the full chain — land, design, consents and CEC-certified installation — so an enquiry becomes a booked site visit, not a cold lead.</p>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="#wizard">Get your instant estimate ↓</a>
-        <a class="btn btn-ghost" href="#how">See the process</a>
+        <a class="btn btn-primary" href="#estimate">Get your instant estimate</a>
+        <a class="btn btn-ghost" href="#process">See how it works</a>
+      </div>
+      <div class="hero-counter">
+        <span class="num mono">01—07</span>
+        <span class="rule"></span>
+        <span>Chapters, start to certified finish</span>
       </div>
     </div>
-    <div class="hero-art" aria-hidden="true">
-      <svg viewBox="0 0 320 320" width="100%" role="img">
-        <g class="rays" transform="translate(160,160)">
-          <g fill="var(--sun)">
-            <rect x="-5" y="-150" width="10" height="46"/>
-            <rect x="-5" y="104" width="10" height="46"/>
-            <rect x="-150" y="-5" width="46" height="10"/>
-            <rect x="104" y="-5" width="46" height="10"/>
-            <rect x="-5" y="-150" width="10" height="46" transform="rotate(45)"/>
-            <rect x="-5" y="104" width="10" height="46" transform="rotate(45)"/>
-            <rect x="-150" y="-5" width="46" height="10" transform="rotate(45)"/>
-            <rect x="104" y="-5" width="46" height="10" transform="rotate(45)"/>
-          </g>
-          <circle r="70" fill="var(--ink)"/>
-          <circle r="70" fill="none" stroke="var(--sun)" stroke-width="3"/>
-        </g>
-        <g transform="translate(70,190)">
-          <polygon points="0,70 90,10 180,70" fill="var(--ink)"/>
-          <rect x="14" y="70" width="152" height="60" fill="var(--circuit)"/>
-          <g stroke="var(--bg)" stroke-width="2">
-            <line x1="30" y1="42" x2="150" y2="42"/>
-            <line x1="38" y1="24" x2="142" y2="24"/>
-          </g>
-          <g fill="var(--bg)" opacity=".9">
-            <rect x="25" y="82" width="34" height="22"/>
-            <rect x="63" y="82" width="34" height="22"/>
-            <rect x="101" y="82" width="34" height="22"/>
-            <rect x="139" y="82" width="22" height="22"/>
-            <rect x="25" y="106" width="34" height="18"/>
-            <rect x="63" y="106" width="34" height="18"/>
-            <rect x="101" y="106" width="34" height="18"/>
-            <rect x="139" y="106" width="22" height="18"/>
-          </g>
-        </g>
-      </svg>
+    <div class="collage" aria-hidden="true">
+      <div class="photo-panel p-roofline">
+        <div class="grain"></div>
+        <svg viewBox="0 0 200 100" preserveAspectRatio="none"><polygon points="0,100 0,55 60,20 120,55 120,100" fill="#15110D"/><g fill="#E8B04B" opacity=".85"><rect x="14" y="58" width="18" height="10"/><rect x="36" y="58" width="18" height="10"/><rect x="58" y="58" width="18" height="10"/><rect x="14" y="70" width="18" height="10"/><rect x="36" y="70" width="18" height="10"/><rect x="58" y="70" width="18" height="10"/></g><polygon points="120,100 120,55 180,20 200,32 200,100" fill="#1E1813" opacity=".7"/></svg>
+        <span class="tag">Rooftop at dusk</span>
+      </div>
+      <div class="photo-panel p-cells">
+        <div class="grain"></div>
+        <div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div><div></div>
+        <span class="tag">Rooftop array</span>
+      </div>
+      <div class="photo-panel p-land">
+        <div class="grain"></div>
+        <span class="tag">Site &amp; land</span>
+      </div>
     </div>
   </div>
 </header>
 
-<div class="strip">
-  <div class="wrap strip-inner">
-    <div class="strip-item"><span class="big mono">Land → Grid</span><span class="small">One partner for the full project chain</span></div>
-    <div class="strip-item"><span class="big mono">CEC-Certified</span><span class="small">Every install commissioned to code</span></div>
-    <div class="strip-item"><span class="big mono">Cape Reinga → Bluff</span><span class="small">Nationwide project coverage</span></div>
-    <div class="strip-item"><span class="big mono">~2 min</span><span class="small">To a real, numbered estimate</span></div>
-  </div>
-</div>
-
-<section id="wizard" class="wizard-section">
+<section id="approach">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Get your instant estimate</p>
+    <p class="eyebrow">(01) The approach</p>
+    <div class="section-head" style="margin-top:14px;">
+      <h2>Most solar enquiries die between the form and the site visit. We close that gap.</h2>
+      <p class="sub">One team carries the project from first conversation to signed-off, grid-connected system — so nothing stalls waiting on a handover.</p>
+    </div>
+    <div class="tags">
+      <span class="tag-chip">Land Acquisition</span>
+      <span class="tag-chip">Residential</span>
+      <span class="tag-chip">Commercial &amp; Utility</span>
+      <span class="tag-chip">Finance &amp; Partnerships</span>
+      <span class="tag-chip">CEC-Certified Install</span>
+    </div>
+  </div>
+</section>
+
+<section id="estimate">
+  <div class="wrap">
+    <p class="eyebrow">(02) Get your estimate</p>
+    <div class="section-head" style="margin-top:14px;">
       <h2>What would solar actually save you?</h2>
-      <p>Three quick questions and an honest, numbered answer — not a placeholder "request a callback" form.</p>
+      <p class="sub">Three quick questions and an honest, numbered answer — not a "request a callback" form.</p>
     </div>
 
     <div class="wizard">
@@ -319,7 +381,6 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
       </div>
 
       <form id="wizForm" class="wizard-body" novalidate>
-        <!-- Pane 0: Property -->
         <div class="wiz-pane active" data-pane="0">
           <h3>Where's the property?</h3>
           <div class="field-row">
@@ -348,7 +409,6 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
           </div>
         </div>
 
-        <!-- Pane 1: Roof -->
         <div class="wiz-pane" data-pane="1">
           <h3>What's the roof working with?</h3>
           <div class="field-row">
@@ -380,7 +440,6 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
           </div>
         </div>
 
-        <!-- Pane 2: Usage -->
         <div class="wiz-pane" data-pane="2">
           <h3>Roughly what's the power bill?</h3>
           <div class="field">
@@ -396,7 +455,6 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
           </div>
         </div>
 
-        <!-- Pane 3: Results -->
         <div class="wiz-pane" data-pane="3">
           <h3>Your Watthaus estimate</h3>
           <div class="results-grid">
@@ -416,7 +474,6 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
           </div>
         </div>
 
-        <!-- Pane 4: Contact / booking -->
         <div class="wiz-pane" data-pane="4">
           <h3>Book your free site assessment</h3>
           <div class="field-row">
@@ -452,7 +509,6 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
           </div>
         </div>
 
-        <!-- Pane 5: success -->
         <div class="wiz-pane" data-pane="5">
           <div class="success">
             <span class="tag">BOOKED</span>
@@ -466,79 +522,137 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
   </div>
 </section>
 
-<section id="how">
+<section id="services">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How it works</p>
-      <h2>Five stations, one accountable project.</h2>
-      <p>The same five steps homeowners just saw above — but this is where the quote becomes a certified, grid-connected system.</p>
+    <p class="eyebrow">(03) What we do</p>
+    <div class="section-head" style="margin-top:14px;">
+      <h2>Wider than most installers, by design.</h2>
+      <p class="sub">Strategic partnerships mean Watthaus can take a project from bare land to switched-on — or just the roof in front of you.</p>
     </div>
-    <div class="timeline">
-      <div class="tl-step"><span class="tl-num mono">01</span><h3>Enquiry</h3><p>Homeowner or landowner starts the two-minute estimate — no call required to get a number.</p></div>
-      <div class="tl-step"><span class="tl-num mono">02</span><h3>Instant estimate</h3><p>System size, savings and payback appear live, calculated from their own usage and roof.</p></div>
-      <div class="tl-step"><span class="tl-num mono">03</span><h3>Site assessment</h3><p>A specialist confirms roof condition, shading, switchboard capacity and consent needs.</p></div>
-      <div class="tl-step"><span class="tl-num mono">04</span><h3>Design &amp; consent</h3><p>Engineered layout, lines-company application and council consent handled end to end.</p></div>
-      <div class="tl-step"><span class="tl-num mono">05</span><h3>CEC-certified install</h3><p>Certified electricians install, commission and sign off the grid connection.</p></div>
+    <div class="twocol">
+      <div class="feature-card">
+        <div class="swatch swatch-1"></div>
+        <span class="n mono">Residential</span>
+        <h3>Rooftop solar</h3>
+        <p>Systems sized to real usage data, not a generic package — the same numbers your site visit will confirm.</p>
+      </div>
+      <div class="feature-card">
+        <div class="swatch swatch-2"></div>
+        <span class="n mono">Land · Commercial · Utility</span>
+        <h3>Site to switched-on</h3>
+        <p>Sourcing, consenting and building larger arrays — structured with the partnerships to get them funded.</p>
+      </div>
     </div>
   </div>
 </section>
 
-<section id="services">
+<div class="stats-strip">
+  <div class="wrap stats-grid">
+    <div class="stat"><span class="v mono">3.6–4.3</span><span class="l">Peak sun hours/day, by region</span></div>
+    <div class="stat"><span class="v mono">CEC</span><span class="l">Certified crews on every install</span></div>
+    <div class="stat"><span class="v mono">Cape Reinga → Bluff</span><span class="l">Nationwide project coverage</span></div>
+    <div class="stat"><span class="v mono">Free</span><span class="l">Site assessment, no obligation</span></div>
+  </div>
+</div>
+
+<section id="projects">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Services</p>
-      <h2>Wider than most installers, by design.</h2>
-      <p>Strategic partnerships mean Watthaus can take a project from bare land to switched-on — or just the roof in front of you.</p>
+    <p class="eyebrow">(04) Where this shows up</p>
+    <div class="section-head" style="margin-top:14px;">
+      <h2>The kind of projects we take on.</h2>
+      <p class="sub">Representative project types across the regions we work in — your estimate above is the same math, tuned to your roof.</p>
     </div>
-    <div class="services">
-      <div class="svc lead">
-        <div>
-          <span class="num mono">01</span>
-          <h3>Land &amp; site acquisition</h3>
-          <p>Sourcing, assessing and securing sites for solar development — from first conversation to signed agreement.</p>
-        </div>
-        <span class="num mono">Full chain →</span>
+    <div class="projects-grid">
+      <div class="project-card proj-1">
+        <div class="img"><div class="grain"></div><span class="reveal">Residential ↗</span></div>
+        <div class="cap"><h3>Rooftop retrofit</h3><span class="mono">Bay of Plenty</span></div>
       </div>
-      <div class="svc">
-        <span class="num mono">02</span>
-        <h3>Residential solar</h3>
-        <p>Rooftop systems sized to real usage data, not a generic package.</p>
+      <div class="project-card proj-2">
+        <div class="img"><div class="grain"></div><span class="reveal">Land &amp; utility ↗</span></div>
+        <div class="cap"><h3>Site development</h3><span class="mono">Canterbury</span></div>
       </div>
-      <div class="svc accent">
-        <span class="num mono">03</span>
-        <h3>Commercial &amp; utility scale</h3>
-        <p>Larger arrays and grid-scale delivery, structured for the business case.</p>
+      <div class="project-card proj-3">
+        <div class="img"><div class="grain"></div><span class="reveal">Commercial ↗</span></div>
+        <div class="cap"><h3>Commercial rooftop</h3><span class="mono">Auckland</span></div>
       </div>
-      <div class="svc">
-        <span class="num mono">04</span>
-        <h3>Strategic partnerships &amp; finance</h3>
-        <p>Landowner, iwi and investor relationships that get projects funded and built.</p>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <p class="eyebrow">(05) How it works</p>
+    <div class="section-head" style="margin-top:14px;">
+      <h2>Three calls, not twelve.</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">01</span><h3>Inquire</h3><p>Run the estimate above — two minutes, no call required to get a real number.</p></div>
+      <div class="step"><span class="n">02</span><h3>Site visit</h3><p>A specialist confirms roof condition, shading and switchboard capacity on-site.</p></div>
+      <div class="step"><span class="n">03</span><h3>Book the install</h3><p>Design, consents and a CEC-certified crew carry it to a signed-off connection.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Residential <em>·</em> Commercial <em>·</em> Land Acquisition <em>·</em> Finance <em>·</em> CEC-Certified <em>·</em> Nationwide <em>·</em></span>
+    <span>Residential <em>·</em> Commercial <em>·</em> Land Acquisition <em>·</em> Finance <em>·</em> CEC-Certified <em>·</em> Nationwide <em>·</em></span>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <p class="eyebrow">(06) Why homeowners switch</p>
+    <div class="section-head" style="margin-top:14px;">
+      <h2>No guesswork, no twelve-week wait for a number.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <svg class="mark" viewBox="0 0 38 38"><circle cx="19" cy="19" r="17" fill="none" stroke="var(--gold)" stroke-width="2"/><path d="M12 19L17 24L26 14" fill="none" stroke="var(--gold)" stroke-width="2"/></svg>
+        <h3>Real numbers before anyone calls</h3>
+        <p>The estimate above runs on your own usage and roof, not a brochure average.</p>
       </div>
-      <div class="svc">
-        <span class="num mono">05</span>
-        <h3>CEC-certified installation</h3>
-        <p>Certified crews, full commissioning and compliance sign-off on every job.</p>
+      <div class="why-item">
+        <svg class="mark" viewBox="0 0 38 38"><rect x="4" y="4" width="30" height="30" fill="none" stroke="var(--gold)" stroke-width="2"/><path d="M4 19H34" stroke="var(--gold)" stroke-width="2"/></svg>
+        <h3>One team, start to finish</h3>
+        <p>Land, design, consents and the certified install sit under one roof — ours.</p>
+      </div>
+      <div class="why-item">
+        <svg class="mark" viewBox="0 0 38 38"><path d="M19 4L34 19L19 34L4 19Z" fill="none" stroke="var(--gold)" stroke-width="2"/></svg>
+        <h3>Priced for NZ power bills</h3>
+        <p>Sized against your actual spend and region's sun hours, not a template system.</p>
       </div>
     </div>
   </div>
 </section>
 
 <section id="coverage">
-  <div class="wrap coverage">
-    <div>
-      <p class="eyebrow">Coverage</p>
+  <div class="wrap">
+    <p class="eyebrow">(07) Coverage</p>
+    <div class="section-head" style="margin-top:14px;">
       <h2>One spine, Cape Reinga to Bluff.</h2>
-      <p style="color:var(--muted); margin-top:14px; max-width:46ch;">Peak sun hours shift by region — the estimate above already accounts for it. This is the same data, by project hub.</p>
+      <p class="sub">Peak sun hours shift by region — the estimate already accounts for it.</p>
     </div>
-    <div class="spine">
-      <div class="node"><span class="city">Auckland</span><span class="sun mono">3.9 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Bay of Plenty</span><span class="sun mono">4.0 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Hawke's Bay</span><span class="sun mono">4.2 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Wellington</span><span class="sun mono">3.7 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Nelson Tasman</span><span class="sun mono">4.3 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Canterbury</span><span class="sun mono">4.1 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Queenstown Lakes</span><span class="sun mono">4.0 peak sun hrs/day</span></div>
-      <div class="node"><span class="city">Otago / Dunedin</span><span class="sun mono">3.6 peak sun hrs/day</span></div>
+    <div class="coverage-grid">
+      <div class="cov-card cov-1"><span class="city">Auckland</span><span class="sun mono">3.9 hrs/day</span></div>
+      <div class="cov-card cov-2"><span class="city">Hawke's Bay</span><span class="sun mono">4.2 hrs/day</span></div>
+      <div class="cov-card cov-3"><span class="city">Wellington</span><span class="sun mono">3.7 hrs/day</span></div>
+      <div class="cov-card cov-4"><span class="city">Nelson Tasman</span><span class="sun mono">4.3 hrs/day</span></div>
+      <div class="cov-card cov-2"><span class="city">Canterbury</span><span class="sun mono">4.1 hrs/day</span></div>
+      <div class="cov-card cov-1"><span class="city">Queenstown Lakes</span><span class="sun mono">4.0 hrs/day</span></div>
+      <div class="cov-card cov-3"><span class="city">Otago</span><span class="sun mono">3.6 hrs/day</span></div>
+      <div class="cov-card cov-4"><span class="city">Bay of Plenty</span><span class="sun mono">4.0 hrs/day</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="closing">
+  <div class="wrap">
+    <p class="eyebrow" style="justify-content:center;">Ready when you are</p>
+    <h2 style="margin-top:18px;">Let's get your roof a <em>real</em> number.</h2>
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#estimate">Get your instant estimate</a>
+      <a class="btn btn-ghost" href="#contact">Talk to Watthaus</a>
     </div>
   </div>
 </section>
@@ -570,26 +684,49 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
     </div>
     <div class="foot-right">
       <div class="logo">
-        <svg class="logo-mark" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" fill="var(--ink)"/><path d="M13 4L21 13L13 22L5 13L13 4Z" fill="var(--sun)"/></svg>
-        WATTHAUS
+        <svg class="logo-mark" viewBox="0 0 24 24" fill="none"><path d="M12 2L21 12L12 22L3 12L12 2Z" fill="var(--gold)"/></svg>
+        Watthaus
       </div>
       <p>Strategy, land, finance and CEC-certified delivery for solar projects across Aotearoa — one accountable team from first enquiry to commissioning.</p>
-      <div class="foot-links">
-        <a href="#how">How it works</a>
-        <a href="#services">Services</a>
-        <a href="#wizard">Get an estimate</a>
+      <div class="foot-cols">
+        <div class="foot-col">
+          <span class="h">Company</span>
+          <a href="#approach">Approach</a>
+          <a href="#services">Services</a>
+          <a href="#process">Process</a>
+        </div>
+        <div class="foot-col">
+          <span class="h">Get started</span>
+          <a href="#estimate">Estimate</a>
+          <a href="#coverage">Coverage</a>
+          <a href="#contact">Contact</a>
+        </div>
       </div>
     </div>
   </div>
   <div class="wrap credit">
     <p>© 2026 Watthaus Strategy Ltd · Estimates are indicative; final figures confirmed after a free site assessment.</p>
-    <p>Concept &amp; build — Code Bunny</p>
+    <a class="back-top" href="#main">Concept &amp; build — Code Bunny · Back to top ↑</a>
   </div>
 </footer>
+</main>
 
 <script>
 (function(){
   "use strict";
+
+  /* ---- mobile overlay menu ---- */
+  var toggle = document.getElementById('menuToggle');
+  var overlay = document.getElementById('overlayMenu');
+  var closeBtn = document.getElementById('overlayClose');
+  function openMenu(){ overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+  function closeMenu(){ overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+  toggle.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+
+  /* ---- wizard ---- */
   var panes = Array.prototype.slice.call(document.querySelectorAll('.wiz-pane'));
   var indicators = Array.prototype.slice.call(document.querySelectorAll('.wp-step'));
   var current = 0;
@@ -608,8 +745,7 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
   }
 
   function validatePane0(){
-    var err = document.getElementById('err0');
-    err.textContent = '';
+    document.getElementById('err0').textContent = '';
     return true;
   }
   function validatePane4(){
@@ -641,9 +777,7 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
 
   var billEl = document.getElementById('bill');
   var billReadout = document.getElementById('billReadout');
-  billEl.addEventListener('input', function(){
-    billReadout.textContent = '$' + billEl.value;
-  });
+  billEl.addEventListener('input', function(){ billReadout.textContent = '$' + billEl.value; });
 
   var batteryEl = document.getElementById('battery');
   var batteryLabel = document.getElementById('batteryLabel');
@@ -651,9 +785,7 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
     batteryLabel.textContent = batteryEl.checked ? 'Battery storage — higher self-use offset' : 'No battery — grid export only';
   });
 
-  function fmtNZD(n){
-    return '$' + Math.round(n).toLocaleString('en-NZ');
-  }
+  function fmtNZD(n){ return '$' + Math.round(n).toLocaleString('en-NZ'); }
 
   function calculate(){
     var sunHours = parseFloat(document.getElementById('region').value);
@@ -703,9 +835,8 @@ footer{border-top:1px solid var(--line); background:var(--surface);}
       var text = btn.dataset.copy;
       var original = btn.textContent;
       function done(ok){ btn.textContent = ok ? 'Copied' : 'Select to copy'; setTimeout(function(){ btn.textContent = original; }, 1600); }
-      try {
-        navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ done(false); });
-      } catch (e) { done(false); }
+      try { navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ done(false); }); }
+      catch (e) { done(false); }
     });
   });
 

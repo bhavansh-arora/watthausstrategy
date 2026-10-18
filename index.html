@@ -5,7 +5,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <style>
 /* Layout: a living energy-flow system — gradient aurora behind a glass UI, particles tracing sun → panel → house → savings */
 :root{
@@ -32,6 +31,7 @@
 *{box-sizing:border-box;}
 html,body{background:var(--bg);}
 html{scroll-behavior:auto;}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth;}}
 body{
   color:var(--ink); font-family:var(--font-body); font-size:16px; position:relative;
   padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px));
@@ -769,21 +769,6 @@ footer{border-top:1px solid var(--line);}
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
 
-  /* ---- smooth scroll (Lenis) + GSAP ScrollTrigger sync ---- */
-  var lenis = null;
-  if (!reducedMotion && typeof Lenis !== 'undefined'){
-    try {
-      lenis = new Lenis({ duration: 1.1, smoothWheel: true });
-      if (hasGsap){
-        lenis.on('scroll', ScrollTrigger.update);
-        gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
-        gsap.ticker.lagSmoothing(0);
-      } else {
-        requestAnimationFrame(function raf(t){ lenis.raf(t); requestAnimationFrame(raf); });
-      }
-    } catch(e){ lenis = null; }
-  }
-
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
 
   /* ---- mobile overlay menu ---- */
@@ -807,12 +792,10 @@ footer{border-top:1px solid var(--line);}
     progressFill.style.width = (max > 0 ? Math.min(100, (y / max) * 100) : 0) + '%';
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  if (lenis) lenis.on('scroll', onScroll);
   onScroll();
 
   document.getElementById('backTop').addEventListener('click', function(){
-    if (lenis) lenis.scrollTo(0, { duration: 1.2 });
-    else window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   /* ---- smooth anchor navigation (nav, overlay menu, in-page CTAs) ---- */
@@ -823,8 +806,7 @@ footer{border-top:1px solid var(--line);}
       var target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      if (lenis) lenis.scrollTo(target, { offset: -96, duration: 1.1 });
-      else target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 

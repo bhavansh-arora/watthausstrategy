@@ -1,0 +1,714 @@
+<title>Watthaus Solar Estimate</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: blueprint grid — paper sections ruled like a solar-array schematic; five Bauhaus-block stations mark the enquiry-to-install funnel */
+:root{
+  --bg:#EDEFE7; --surface:#FFFFFF; --ink:#12161C; --muted:#52585F;
+  --sun:#F5B400; --circuit:#0B5D52; --signal:#C8402A; --line:rgba(18,22,28,.14);
+  --font-display:'Unbounded',system-ui,sans-serif;
+  --font-body:'Work Sans',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B0D10; --surface:#15181C; --ink:#EEEDE4; --muted:#9BA1A6;
+    --sun:#FFC933; --circuit:#2FA592; --signal:#E8604A; --line:rgba(238,237,228,.16);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B0D10; --surface:#15181C; --ink:#EEEDE4; --muted:#9BA1A6;
+  --sun:#FFC933; --circuit:#2FA592; --signal:#E8604A; --line:rgba(238,237,228,.16);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--font-body);
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+}
+body::before{
+  content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px);
+  z-index:40; background:var(--bg);
+}
+.wrap{max-width:1180px; margin:0 auto;}
+h1,h2,h3{font-family:var(--font-display); line-height:1.02; text-wrap:balance; margin:0; letter-spacing:-.01em;}
+p{line-height:1.6; margin:0;}
+a{color:inherit;}
+.mono{font-family:var(--font-mono); letter-spacing:.02em;}
+.eyebrow{
+  font-family:var(--font-mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--circuit); font-weight:600;
+}
+:root[data-theme="dark"] .eyebrow, @media (prefers-color-scheme:dark){ }
+
+/* ---------- Nav ---------- */
+nav{
+  position:sticky; top:env(safe-area-inset-top,0px); z-index:30;
+  background:var(--bg); border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding-block:16px;
+}
+.logo{display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:800; font-size:19px;}
+.logo-mark{width:26px; height:26px; flex:0 0 auto;}
+.nav-links{display:flex; align-items:center; gap:28px; font-size:14px; font-weight:500;}
+.nav-links a{text-decoration:none; opacity:.78;}
+.nav-links a:hover{opacity:1;}
+.btn{
+  font-family:var(--font-body); font-weight:700; font-size:14px; border:none; cursor:pointer;
+  padding:12px 22px; border-radius:2px; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-primary{background:var(--sun); color:var(--ink);}
+.btn-primary:hover{filter:brightness(0.95);}
+.btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--ink);}
+.btn-ghost:hover{background:var(--ink); color:var(--bg);}
+.btn:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible{outline:2.5px solid var(--circuit); outline-offset:2px;}
+
+/* ---------- Hero ---------- */
+.hero{padding-block:64px 48px; border-bottom:1px solid var(--line);}
+.hero-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center;}
+.hero h1{font-size:clamp(40px,6vw,74px); font-weight:800;}
+.hero .accent{color:var(--sun); -webkit-text-stroke:1.5px var(--ink); text-stroke:1.5px var(--ink);}
+.hero p.lede{font-size:18px; color:var(--muted); max-width:46ch; margin-top:18px;}
+.hero-ctas{display:flex; gap:14px; margin-top:30px; flex-wrap:wrap;}
+.hero-art{position:relative;}
+.rays{animation:spin 40s linear infinite;}
+@media (prefers-reduced-motion:reduce){.rays{animation:none;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ---------- Trust strip ---------- */
+.strip{border-bottom:1px solid var(--line); background:var(--surface);}
+.strip-inner{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding-block:28px;}
+.strip-item{display:flex; flex-direction:column; gap:4px; min-width:0;}
+.strip-item .big{font-family:var(--font-mono); font-size:16px; font-weight:600; color:var(--circuit);}
+.strip-item .small{font-size:13px; color:var(--muted);}
+
+/* ---------- Section shells ---------- */
+section{padding-block:72px;}
+.section-head{max-width:640px; margin-bottom:40px;}
+.section-head h2{font-size:clamp(28px,4vw,42px); margin-top:10px;}
+.section-head p{color:var(--muted); margin-top:14px; font-size:16px;}
+
+/* ---------- Process timeline ---------- */
+.timeline{display:grid; grid-template-columns:repeat(5,1fr); gap:0; border:1px solid var(--line);}
+.tl-step{
+  padding:26px 20px; border-right:1px solid var(--line); min-width:0; display:flex; flex-direction:column; gap:10px;
+  background:var(--surface);
+}
+.tl-step:last-child{border-right:none;}
+.tl-num{font-family:var(--font-mono); font-size:13px; color:var(--sun); font-weight:600; background:var(--ink); color:var(--bg); width:28px; height:28px; display:flex; align-items:center; justify-content:center;}
+.tl-step h3{font-size:16px; font-weight:700;}
+.tl-step p{font-size:13.5px; color:var(--muted);}
+
+/* ---------- Wizard ---------- */
+.wizard-section{background:var(--ink); color:var(--bg); border-bottom:1px solid var(--line);}
+.wizard-section .eyebrow{color:var(--sun);}
+.wizard-section .section-head p{color:#ffffffb0;}
+:root[data-theme="light"] .wizard-section .section-head p, .wizard-section .section-head p{color:rgba(238,237,228,.72);}
+.wizard{
+  background:var(--bg); color:var(--ink); border:1px solid var(--line);
+  display:grid; grid-template-columns:1fr; overflow:hidden;
+}
+.wizard-progress{display:grid; grid-template-columns:repeat(5,1fr); border-bottom:1px solid var(--line);}
+.wp-step{padding:14px 10px; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; text-align:center; color:var(--muted); border-right:1px solid var(--line); background:var(--surface); transition:background .2s,color .2s;}
+.wp-step:last-child{border-right:none;}
+.wp-step.active{background:var(--sun); color:var(--ink); font-weight:700;}
+.wp-step.done{background:var(--circuit); color:#fff;}
+.wizard-body{padding:40px; min-height:360px; display:flex; flex-direction:column; gap:26px;}
+.wiz-pane{display:none; flex-direction:column; gap:22px;}
+.wiz-pane.active{display:flex;}
+.wiz-pane h3{font-size:22px; font-weight:700;}
+.field-row{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+.field{display:flex; flex-direction:column; gap:8px; min-width:0;}
+.field label{font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);}
+.field select, .field input[type=text], .field input[type=email], .field input[type=tel], .field input[type=number]{
+  font-family:var(--font-body); font-size:15px; padding:13px 14px; border:1.5px solid var(--line); background:var(--surface); color:var(--ink);
+  border-radius:2px; width:100%;
+}
+.field select:focus, .field input:focus{border-color:var(--circuit);}
+.bill-row{display:flex; align-items:center; gap:18px;}
+input[type=range]{flex:1; accent-color:var(--circuit); min-width:0;}
+.bill-readout{font-family:var(--font-mono); font-size:22px; font-weight:600; min-width:92px; color:var(--circuit); flex:0 0 auto;}
+.toggle-row{display:flex; align-items:center; gap:12px;}
+.toggle{position:relative; width:46px; height:26px; flex:0 0 auto;}
+.toggle input{position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer;}
+.toggle .track{position:absolute; inset:0; background:var(--line); border-radius:999px; transition:background .2s;}
+.toggle .thumb{position:absolute; top:3px; left:3px; width:20px; height:20px; border-radius:50%; background:var(--surface); border:1.5px solid var(--muted); transition:left .2s;}
+.toggle input:checked + .track{background:var(--circuit);}
+.toggle input:checked ~ .thumb{left:23px; border-color:var(--circuit);}
+.wiz-actions{display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:10px;}
+.err{font-size:13px; color:var(--signal); min-height:18px;}
+
+.results-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+.result-tile{background:var(--surface); padding:22px 18px; display:flex; flex-direction:column; gap:6px; min-width:0;}
+.result-tile .label{font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--muted);}
+.result-tile .value{font-family:var(--font-mono); font-size:30px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--circuit);}
+.result-tile.hi .value{color:var(--sun); -webkit-text-stroke:.6px var(--ink);}
+.result-note{font-size:13px; color:var(--muted);}
+.result-cta{display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap; background:var(--surface); border:1px solid var(--line); padding:20px 22px;}
+
+.success{display:flex; flex-direction:column; gap:14px; align-items:flex-start;}
+.success .tag{background:var(--circuit); color:#fff; font-family:var(--font-mono); font-size:12px; padding:6px 10px; letter-spacing:.06em;}
+.success h3{font-size:24px;}
+
+/* ---------- Services ---------- */
+.services{display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:auto auto; gap:14px;}
+.svc{border:1px solid var(--line); background:var(--surface); padding:26px 22px; display:flex; flex-direction:column; gap:12px; min-width:0;}
+.svc .num{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+.svc h3{font-size:18px; font-weight:700;}
+.svc p{font-size:14px; color:var(--muted);}
+.svc.lead{grid-column:span 2; grid-row:span 2; background:var(--circuit); color:#fff; justify-content:space-between;}
+.svc.lead .num{color:#ffffffa0;}
+.svc.lead p{color:#ffffffcc;}
+.svc.accent{background:var(--sun);}
+.svc.accent p, .svc.accent .num{color:rgba(18,22,28,.68);}
+
+/* ---------- Coverage ---------- */
+.coverage{display:grid; grid-template-columns:.9fr 1.1fr; gap:48px; align-items:center;}
+.spine{display:flex; flex-direction:column; align-items:stretch; position:relative; padding-left:28px;}
+.spine::before{content:""; position:absolute; left:9px; top:6px; bottom:6px; width:2px; background:var(--line);}
+.node{display:flex; align-items:center; gap:14px; padding-block:11px; position:relative;}
+.node::before{content:""; position:absolute; left:-28px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:var(--sun); border:2px solid var(--ink); z-index:1;}
+:root[data-theme="dark"] .node::before{border-color:var(--bg);}
+.node .city{font-weight:700; font-size:15px;}
+.node .sun{font-family:var(--font-mono); font-size:13px; color:var(--muted);}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--line); background:var(--surface);}
+.foot-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:48px; padding-block:56px;}
+.contact-card{background:var(--ink); color:var(--bg); padding:34px; border:1px solid var(--line);}
+.contact-card .role{font-family:var(--font-mono); font-size:12.5px; color:var(--sun); text-transform:uppercase; letter-spacing:.06em;}
+.contact-card h3{font-size:24px; margin-top:8px;}
+.contact-card .co{color:rgba(238,237,228,.72); margin-top:2px; font-size:14px;}
+.contact-rows{display:flex; flex-direction:column; gap:12px; margin-top:22px;}
+.contact-row{display:flex; align-items:center; gap:12px; justify-content:space-between; border-top:1px solid rgba(238,237,228,.14); padding-top:12px;}
+.contact-row .v{font-family:var(--font-mono); font-size:14px; word-break:break-word;}
+.copy-btn{
+  font-family:var(--font-mono); font-size:11.5px; background:transparent; border:1px solid rgba(238,237,228,.4);
+  color:var(--bg); padding:6px 10px; cursor:pointer; flex:0 0 auto; border-radius:2px;
+}
+.copy-btn:hover{background:rgba(238,237,228,.14);}
+.foot-right{display:flex; flex-direction:column; gap:22px;}
+.foot-right .logo{font-size:22px;}
+.foot-right p{color:var(--muted); font-size:14px; max-width:40ch;}
+.foot-links{display:flex; gap:20px; flex-wrap:wrap; font-size:13.5px;}
+.foot-links a{text-decoration:underline; opacity:.8;}
+.credit{border-top:1px solid var(--line); padding-block:18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;}
+.credit p{font-family:var(--font-mono); font-size:12px; color:var(--muted);}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-art{order:-1; max-width:260px;}
+  .strip-inner{grid-template-columns:repeat(2,1fr);}
+  .timeline{grid-template-columns:1fr; }
+  .tl-step{border-right:none; border-bottom:1px solid var(--line);}
+  .field-row{grid-template-columns:1fr;}
+  .results-grid{grid-template-columns:repeat(2,1fr);}
+  .services{grid-template-columns:1fr 1fr;}
+  .svc.lead{grid-column:span 2; grid-row:auto;}
+  .coverage{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr;}
+  nav .nav-links a:not(.btn){display:none;}
+}
+@media (max-width:560px){
+  .wizard-body{padding:24px 18px;}
+  .services{grid-template-columns:1fr;}
+  .svc.lead{grid-column:1; }
+  .results-grid{grid-template-columns:1fr 1fr;}
+  .wp-step{font-size:9.5px; padding:12px 4px;}
+}
+</style>
+
+<nav>
+  <div class="wrap nav-inner">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" fill="var(--ink)"/><path d="M13 4L21 13L13 22L5 13L13 4Z" fill="var(--sun)"/></svg>
+      WATTHAUS
+    </div>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#services">Services</a>
+      <a href="#coverage">Coverage</a>
+      <a href="#contact">Contact</a>
+      <a class="btn btn-primary" href="#wizard">Get your estimate</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow">Solar strategy &amp; delivery · Aotearoa New Zealand</p>
+      <h1>From paddock to <span class="accent">power</span>, signed off and switched on.</h1>
+      <p class="lede">Watthaus runs the whole chain — land acquisition, design, consents and CEC-certified installation — so an enquiry becomes a booked site visit instead of a cold lead.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#wizard">Get your instant estimate ↓</a>
+        <a class="btn btn-ghost" href="#how">See the process</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 320 320" width="100%" role="img">
+        <g class="rays" transform="translate(160,160)">
+          <g fill="var(--sun)">
+            <rect x="-5" y="-150" width="10" height="46"/>
+            <rect x="-5" y="104" width="10" height="46"/>
+            <rect x="-150" y="-5" width="46" height="10"/>
+            <rect x="104" y="-5" width="46" height="10"/>
+            <rect x="-5" y="-150" width="10" height="46" transform="rotate(45)"/>
+            <rect x="-5" y="104" width="10" height="46" transform="rotate(45)"/>
+            <rect x="-150" y="-5" width="46" height="10" transform="rotate(45)"/>
+            <rect x="104" y="-5" width="46" height="10" transform="rotate(45)"/>
+          </g>
+          <circle r="70" fill="var(--ink)"/>
+          <circle r="70" fill="none" stroke="var(--sun)" stroke-width="3"/>
+        </g>
+        <g transform="translate(70,190)">
+          <polygon points="0,70 90,10 180,70" fill="var(--ink)"/>
+          <rect x="14" y="70" width="152" height="60" fill="var(--circuit)"/>
+          <g stroke="var(--bg)" stroke-width="2">
+            <line x1="30" y1="42" x2="150" y2="42"/>
+            <line x1="38" y1="24" x2="142" y2="24"/>
+          </g>
+          <g fill="var(--bg)" opacity=".9">
+            <rect x="25" y="82" width="34" height="22"/>
+            <rect x="63" y="82" width="34" height="22"/>
+            <rect x="101" y="82" width="34" height="22"/>
+            <rect x="139" y="82" width="22" height="22"/>
+            <rect x="25" y="106" width="34" height="18"/>
+            <rect x="63" y="106" width="34" height="18"/>
+            <rect x="101" y="106" width="34" height="18"/>
+            <rect x="139" y="106" width="22" height="18"/>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="strip">
+  <div class="wrap strip-inner">
+    <div class="strip-item"><span class="big mono">Land → Grid</span><span class="small">One partner for the full project chain</span></div>
+    <div class="strip-item"><span class="big mono">CEC-Certified</span><span class="small">Every install commissioned to code</span></div>
+    <div class="strip-item"><span class="big mono">Cape Reinga → Bluff</span><span class="small">Nationwide project coverage</span></div>
+    <div class="strip-item"><span class="big mono">~2 min</span><span class="small">To a real, numbered estimate</span></div>
+  </div>
+</div>
+
+<section id="wizard" class="wizard-section">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Get your instant estimate</p>
+      <h2>What would solar actually save you?</h2>
+      <p>Three quick questions and an honest, numbered answer — not a placeholder "request a callback" form.</p>
+    </div>
+
+    <div class="wizard">
+      <div class="wizard-progress">
+        <div class="wp-step active" data-step-indicator="0">01 Property</div>
+        <div class="wp-step" data-step-indicator="1">02 Roof</div>
+        <div class="wp-step" data-step-indicator="2">03 Usage</div>
+        <div class="wp-step" data-step-indicator="3">04 Estimate</div>
+        <div class="wp-step" data-step-indicator="4">05 Book visit</div>
+      </div>
+
+      <form id="wizForm" class="wizard-body" novalidate>
+        <!-- Pane 0: Property -->
+        <div class="wiz-pane active" data-pane="0">
+          <h3>Where's the property?</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="region">Region</label>
+              <select id="region">
+                <option value="3.9">Auckland</option>
+                <option value="3.8">Waikato / Hamilton</option>
+                <option value="4.0">Bay of Plenty</option>
+                <option value="4.2">Hawke's Bay</option>
+                <option value="3.7">Wellington</option>
+                <option value="4.3">Nelson / Tasman</option>
+                <option value="4.1">Canterbury / Christchurch</option>
+                <option value="3.6">Otago / Dunedin</option>
+                <option value="4.0" selected>Queenstown Lakes</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="address">Address <span style="opacity:.6">(optional)</span></label>
+              <input type="text" id="address" placeholder="12 Lakeview Terrace">
+            </div>
+          </div>
+          <div class="wiz-actions">
+            <span class="err" id="err0"></span>
+            <button type="button" class="btn btn-primary" data-next>Next: Roof →</button>
+          </div>
+        </div>
+
+        <!-- Pane 1: Roof -->
+        <div class="wiz-pane" data-pane="1">
+          <h3>What's the roof working with?</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="orientation">Main roof orientation</label>
+              <select id="orientation">
+                <option value="1">North facing</option>
+                <option value="0.93" selected>North-East / North-West</option>
+                <option value="0.82">East / West</option>
+                <option value="0.88">Flat / not sure</option>
+                <option value="0.62">South facing</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Battery storage interest</label>
+              <div class="toggle-row">
+                <span class="toggle">
+                  <input type="checkbox" id="battery">
+                  <span class="track"></span>
+                  <span class="thumb"></span>
+                </span>
+                <span id="batteryLabel" style="font-size:14px;">No battery — grid export only</span>
+              </div>
+            </div>
+          </div>
+          <div class="wiz-actions">
+            <button type="button" class="btn btn-ghost" data-prev>← Back</button>
+            <button type="button" class="btn btn-primary" data-next>Next: Usage →</button>
+          </div>
+        </div>
+
+        <!-- Pane 2: Usage -->
+        <div class="wiz-pane" data-pane="2">
+          <h3>Roughly what's the power bill?</h3>
+          <div class="field">
+            <label for="bill">Average monthly electricity bill</label>
+            <div class="bill-row">
+              <input type="range" id="bill" min="80" max="600" step="10" value="240">
+              <span class="bill-readout mono" id="billReadout">$240</span>
+            </div>
+          </div>
+          <div class="wiz-actions">
+            <button type="button" class="btn btn-ghost" data-prev>← Back</button>
+            <button type="button" class="btn btn-primary" data-next>Calculate my estimate →</button>
+          </div>
+        </div>
+
+        <!-- Pane 3: Results -->
+        <div class="wiz-pane" data-pane="3">
+          <h3>Your Watthaus estimate</h3>
+          <div class="results-grid">
+            <div class="result-tile hi"><span class="label">System size</span><span class="value mono" id="rSize">—</span><span class="result-note">kW, roof-mounted</span></div>
+            <div class="result-tile"><span class="label">Annual savings</span><span class="value mono" id="rSavings">—</span><span class="result-note">vs. grid-only power</span></div>
+            <div class="result-tile"><span class="label">Payback period</span><span class="value mono" id="rPayback">—</span><span class="result-note">years to break even</span></div>
+            <div class="result-tile"><span class="label">10-yr net benefit</span><span class="value mono" id="rTenYear">—</span><span class="result-note">after install cost</span></div>
+          </div>
+          <p class="result-note">Estimated installed cost <strong class="mono" id="rCost">—</strong> · CO₂ avoided <strong class="mono" id="rCo2">—</strong>/yr. Ballpark only — your exact number is confirmed on a free site assessment.</p>
+          <div class="result-cta">
+            <p style="max-width:44ch; font-size:14px;">Like what you see? Lock in a free site visit and we'll turn this into a signed-off design.</p>
+            <button type="button" class="btn btn-primary" data-next>Book my site visit →</button>
+          </div>
+          <div class="wiz-actions">
+            <button type="button" class="btn btn-ghost" data-prev>← Back</button>
+            <span></span>
+          </div>
+        </div>
+
+        <!-- Pane 4: Contact / booking -->
+        <div class="wiz-pane" data-pane="4">
+          <h3>Book your free site assessment</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input type="text" id="name" placeholder="Jordan Smith" autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="you@email.co.nz" autocomplete="email">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" placeholder="021 234 5678" autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="when">Best time for a call</label>
+              <select id="when">
+                <option>Weekday mornings</option>
+                <option>Weekday afternoons</option>
+                <option>Weekends</option>
+              </select>
+            </div>
+          </div>
+          <div class="wiz-actions">
+            <button type="button" class="btn btn-ghost" data-prev>← Back</button>
+            <div style="display:flex; align-items:center; gap:14px;">
+              <span class="err" id="err4"></span>
+              <button type="submit" class="btn btn-primary">Confirm booking →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pane 5: success -->
+        <div class="wiz-pane" data-pane="5">
+          <div class="success">
+            <span class="tag">BOOKED</span>
+            <h3>You're in the queue, <span id="successName">there</span>.</h3>
+            <p style="color:var(--muted); max-width:46ch;">A Watthaus specialist will confirm your site visit within one business day, using the numbers from this estimate as the starting design brief.</p>
+            <button type="button" class="btn btn-ghost" data-restart>Run another estimate</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2>Five stations, one accountable project.</h2>
+      <p>The same five steps homeowners just saw above — but this is where the quote becomes a certified, grid-connected system.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-step"><span class="tl-num mono">01</span><h3>Enquiry</h3><p>Homeowner or landowner starts the two-minute estimate — no call required to get a number.</p></div>
+      <div class="tl-step"><span class="tl-num mono">02</span><h3>Instant estimate</h3><p>System size, savings and payback appear live, calculated from their own usage and roof.</p></div>
+      <div class="tl-step"><span class="tl-num mono">03</span><h3>Site assessment</h3><p>A specialist confirms roof condition, shading, switchboard capacity and consent needs.</p></div>
+      <div class="tl-step"><span class="tl-num mono">04</span><h3>Design &amp; consent</h3><p>Engineered layout, lines-company application and council consent handled end to end.</p></div>
+      <div class="tl-step"><span class="tl-num mono">05</span><h3>CEC-certified install</h3><p>Certified electricians install, commission and sign off the grid connection.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Services</p>
+      <h2>Wider than most installers, by design.</h2>
+      <p>Strategic partnerships mean Watthaus can take a project from bare land to switched-on — or just the roof in front of you.</p>
+    </div>
+    <div class="services">
+      <div class="svc lead">
+        <div>
+          <span class="num mono">01</span>
+          <h3>Land &amp; site acquisition</h3>
+          <p>Sourcing, assessing and securing sites for solar development — from first conversation to signed agreement.</p>
+        </div>
+        <span class="num mono">Full chain →</span>
+      </div>
+      <div class="svc">
+        <span class="num mono">02</span>
+        <h3>Residential solar</h3>
+        <p>Rooftop systems sized to real usage data, not a generic package.</p>
+      </div>
+      <div class="svc accent">
+        <span class="num mono">03</span>
+        <h3>Commercial &amp; utility scale</h3>
+        <p>Larger arrays and grid-scale delivery, structured for the business case.</p>
+      </div>
+      <div class="svc">
+        <span class="num mono">04</span>
+        <h3>Strategic partnerships &amp; finance</h3>
+        <p>Landowner, iwi and investor relationships that get projects funded and built.</p>
+      </div>
+      <div class="svc">
+        <span class="num mono">05</span>
+        <h3>CEC-certified installation</h3>
+        <p>Certified crews, full commissioning and compliance sign-off on every job.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="coverage">
+  <div class="wrap coverage">
+    <div>
+      <p class="eyebrow">Coverage</p>
+      <h2>One spine, Cape Reinga to Bluff.</h2>
+      <p style="color:var(--muted); margin-top:14px; max-width:46ch;">Peak sun hours shift by region — the estimate above already accounts for it. This is the same data, by project hub.</p>
+    </div>
+    <div class="spine">
+      <div class="node"><span class="city">Auckland</span><span class="sun mono">3.9 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Bay of Plenty</span><span class="sun mono">4.0 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Hawke's Bay</span><span class="sun mono">4.2 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Wellington</span><span class="sun mono">3.7 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Nelson Tasman</span><span class="sun mono">4.3 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Canterbury</span><span class="sun mono">4.1 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Queenstown Lakes</span><span class="sun mono">4.0 peak sun hrs/day</span></div>
+      <div class="node"><span class="city">Otago / Dunedin</span><span class="sun mono">3.6 peak sun hrs/day</span></div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="wrap foot-grid">
+    <div class="contact-card">
+      <p class="role">Co-Founder &amp; Head of Strategic Partnerships</p>
+      <h3>Anjana Premashantha</h3>
+      <p class="co">Watthaus Strategy Ltd</p>
+      <div class="contact-rows">
+        <div class="contact-row">
+          <span class="v">+64 22 646 1996</span>
+          <button class="copy-btn" data-copy="+64 22 646 1996">Copy</button>
+        </div>
+        <div class="contact-row">
+          <span class="v">anjana@watthausstrategy.co.nz</span>
+          <button class="copy-btn" data-copy="anjana@watthausstrategy.co.nz">Copy</button>
+        </div>
+        <div class="contact-row">
+          <a class="v" href="https://www.watthausstrategy.co.nz" target="_blank" rel="noopener">www.watthausstrategy.co.nz</a>
+          <span></span>
+        </div>
+        <div class="contact-row">
+          <a class="v" href="https://www.linkedin.com/company/watthaus-strategy-ltd/" target="_blank" rel="noopener">LinkedIn →</a>
+          <span></span>
+        </div>
+      </div>
+    </div>
+    <div class="foot-right">
+      <div class="logo">
+        <svg class="logo-mark" viewBox="0 0 26 26" fill="none"><rect width="26" height="26" fill="var(--ink)"/><path d="M13 4L21 13L13 22L5 13L13 4Z" fill="var(--sun)"/></svg>
+        WATTHAUS
+      </div>
+      <p>Strategy, land, finance and CEC-certified delivery for solar projects across Aotearoa — one accountable team from first enquiry to commissioning.</p>
+      <div class="foot-links">
+        <a href="#how">How it works</a>
+        <a href="#services">Services</a>
+        <a href="#wizard">Get an estimate</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap credit">
+    <p>© 2026 Watthaus Strategy Ltd · Estimates are indicative; final figures confirmed after a free site assessment.</p>
+    <p>Concept &amp; build — Code Bunny</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var panes = Array.prototype.slice.call(document.querySelectorAll('.wiz-pane'));
+  var indicators = Array.prototype.slice.call(document.querySelectorAll('.wp-step'));
+  var current = 0;
+
+  function clampIndicator(i){ return Math.min(i, indicators.length - 1); }
+
+  function showPane(i){
+    panes.forEach(function(p){ p.classList.toggle('active', Number(p.dataset.pane) === i); });
+    var ind = clampIndicator(i);
+    indicators.forEach(function(el, idx){
+      el.classList.remove('active','done');
+      if (idx < ind) el.classList.add('done');
+      if (idx === ind) el.classList.add('active');
+    });
+    current = i;
+  }
+
+  function validatePane0(){
+    var err = document.getElementById('err0');
+    err.textContent = '';
+    return true;
+  }
+  function validatePane4(){
+    var name = document.getElementById('name').value.trim();
+    var email = document.getElementById('email').value.trim();
+    var err = document.getElementById('err4');
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!name || !emailOk){
+      err.textContent = 'Add your name and a valid email to confirm.';
+      return false;
+    }
+    err.textContent = '';
+    return true;
+  }
+
+  document.querySelectorAll('[data-next]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      if (current === 0 && !validatePane0()) return;
+      if (current === 3) { calculate(); }
+      showPane(current + 1);
+    });
+  });
+  document.querySelectorAll('[data-prev]').forEach(function(btn){
+    btn.addEventListener('click', function(){ showPane(current - 1); });
+  });
+  document.querySelectorAll('[data-restart]').forEach(function(btn){
+    btn.addEventListener('click', function(){ showPane(0); });
+  });
+
+  var billEl = document.getElementById('bill');
+  var billReadout = document.getElementById('billReadout');
+  billEl.addEventListener('input', function(){
+    billReadout.textContent = '$' + billEl.value;
+  });
+
+  var batteryEl = document.getElementById('battery');
+  var batteryLabel = document.getElementById('batteryLabel');
+  batteryEl.addEventListener('change', function(){
+    batteryLabel.textContent = batteryEl.checked ? 'Battery storage — higher self-use offset' : 'No battery — grid export only';
+  });
+
+  function fmtNZD(n){
+    return '$' + Math.round(n).toLocaleString('en-NZ');
+  }
+
+  function calculate(){
+    var sunHours = parseFloat(document.getElementById('region').value);
+    var orientation = parseFloat(document.getElementById('orientation').value);
+    var bill = parseFloat(billEl.value);
+    var hasBattery = batteryEl.checked;
+
+    var PRICE_PER_KWH = 0.31;
+    var SYSTEM_DERATE = 0.80;
+    var OFFSET_RATIO = hasBattery ? 0.80 : 0.55;
+
+    var annualUsageKwh = (bill * 12) / PRICE_PER_KWH;
+    var targetOffsetKwh = annualUsageKwh * OFFSET_RATIO;
+
+    var systemSizeKw = targetOffsetKwh / (sunHours * 365 * orientation * SYSTEM_DERATE);
+    systemSizeKw = Math.max(2, Math.min(15, Math.round(systemSizeKw * 2) / 2));
+
+    var annualGenerationKwh = systemSizeKw * sunHours * 365 * orientation * SYSTEM_DERATE;
+    var annualSavings = annualGenerationKwh * PRICE_PER_KWH * 0.9;
+
+    var costPerKw = systemSizeKw <= 4 ? 2500 : (systemSizeKw <= 8 ? 2250 : 2100);
+    var installedCost = systemSizeKw * costPerKw;
+
+    var paybackYears = installedCost / annualSavings;
+    var tenYearNet = (annualSavings * 10) - installedCost;
+    var co2SavedKg = annualGenerationKwh * 0.09;
+
+    document.getElementById('rSize').textContent = systemSizeKw.toFixed(1) + ' kW';
+    document.getElementById('rSavings').textContent = fmtNZD(annualSavings) + '/yr';
+    document.getElementById('rPayback').textContent = paybackYears.toFixed(1) + ' yrs';
+    document.getElementById('rTenYear').textContent = (tenYearNet >= 0 ? '' : '-') + fmtNZD(Math.abs(tenYearNet));
+    document.getElementById('rCost').textContent = fmtNZD(installedCost);
+    document.getElementById('rCo2').textContent = Math.round(co2SavedKg).toLocaleString('en-NZ') + ' kg';
+  }
+
+  var form = document.getElementById('wizForm');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if (!validatePane4()) return;
+    var name = document.getElementById('name').value.trim().split(' ')[0];
+    document.getElementById('successName').textContent = name || 'there';
+    showPane(5);
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var text = btn.dataset.copy;
+      var original = btn.textContent;
+      function done(ok){ btn.textContent = ok ? 'Copied' : 'Select to copy'; setTimeout(function(){ btn.textContent = original; }, 1600); }
+      try {
+        navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ done(false); });
+      } catch (e) { done(false); }
+    });
+  });
+
+  calculate();
+})();
+</script>

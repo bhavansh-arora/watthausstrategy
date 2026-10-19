@@ -134,7 +134,7 @@
           if (/^\s+$/.test(part)){ frag.appendChild(document.createTextNode(' ')); return; }
           var w = document.createElement('span'); w.className = 'word';
           var inner = document.createElement('span'); inner.textContent = part;
-          inner.style.transitionDelay = (wordIndex++ * 0.035) + 's';
+          inner.style.transitionDelay = (wordIndex++ * 0.05) + 's';
           w.appendChild(inner); frag.appendChild(w);
         });
         child.parentNode.replaceChild(frag, child);
@@ -177,7 +177,7 @@
 
   /* ---------- velocity-aware ticker + keyword band ---------- */
   try { (function(){
-    var tracks = [document.getElementById('tickerTrack'), document.getElementById('keywordTrack')].filter(Boolean);
+    var tracks = [document.getElementById('tickerTrack'), document.getElementById('keywordTrack'), document.getElementById('partnersTrack')].filter(Boolean);
     if (!tracks.length) return;
     /* Guarantee each half has enough repeated content to never gap, on any monitor width. */
     tracks.forEach(function(track){

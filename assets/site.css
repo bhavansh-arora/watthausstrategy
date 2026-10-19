@@ -112,13 +112,15 @@ nav.is-hidden{transform:translateY(-100%);}
 .overlay-list a{font-size:clamp(30px,8vw,48px); font-weight:700;}
 .overlay-list a.is-current{color:var(--gold-light);}
 
-/* word-mask heading reveal — each word flips up out of its mask rather than just sliding, for a kinetic cascade */
-.lines .line{display:block; overflow:hidden; padding-bottom:.28em; margin-bottom:-.28em; perspective:600px;}
+/* word-mask heading reveal — each word rises and fades in with a slight overshoot, for a kinetic cascade.
+   (A rotateX 3D tilt was tried here but corrupts the cursive script font's connected swashes mid-transition
+   — "packages" rendered as garbled glyph soup while mid-flip — so the reveal stays 2D: translateY + opacity.) */
+.lines .line{display:block; overflow:hidden; padding-bottom:.28em; margin-bottom:-.28em;}
 .lines .word{display:inline-block; overflow:hidden; vertical-align:top;}
-.lines .word > span{display:inline-block; will-change:transform, opacity; transform-origin:50% 100%;
-  transform:translateY(112%) rotateX(-55deg) scale(.94); opacity:0;
-  transition:transform .95s cubic-bezier(.16,1,.3,1), opacity .6s ease;}
-.lines.is-in .word > span{transform:translateY(0) rotateX(0deg) scale(1); opacity:1;}
+.lines .word > span{display:inline-block; will-change:transform, opacity;
+  transform:translateY(112%); opacity:0;
+  transition:transform .95s cubic-bezier(.16,1,.3,1), opacity .7s ease;}
+.lines.is-in .word > span{transform:translateY(0); opacity:1;}
 @media (prefers-reduced-motion:reduce){ .lines .word > span{transform:none !important; opacity:1 !important; transition:none !important;} }
 
 /* ---------- hero (full bleed) ---------- */

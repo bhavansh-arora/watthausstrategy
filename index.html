@@ -194,7 +194,25 @@
 <section class="t-ink">
   <div class="wrap">
     <span class="sec-num" aria-hidden="true">02</span>
-    <p class="eyebrow reveal">(02) How it works</p>
+    <p class="eyebrow reveal">(02) Where this shows up</p>
+    <div class="section-head reveal" style="margin-top:14px;">
+      <h2 data-lines>The kind of projects <em>we take on</em>.</h2>
+    </div>
+    <a class="services-preview reveal" href="services.html">
+      <img src="images/solar-farm-aerial.jpg" alt="Aerial view of a utility-scale solar array">
+      <div class="services-preview-content">
+        <h3>Residential, commercial &amp; land.</h3>
+        <p>Representative project types across the regions we work in — your estimate is the same math, tuned to your roof.</p>
+        <span class="process-more">Explore our work <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="t-ink" style="padding-top:0;">
+  <div class="wrap">
+    <span class="sec-num" aria-hidden="true">03</span>
+    <p class="eyebrow reveal">(03) How it works</p>
     <div class="section-head reveal" style="margin-top:14px;">
       <h2 data-lines>Five steps, <em>certified</em> finish.</h2>
     </div>
@@ -219,31 +237,30 @@
   </div>
 </section>
 
-<section class="t-ink" style="padding-top:0;">
-  <div class="wrap">
-    <span class="sec-num" aria-hidden="true">03</span>
-    <p class="eyebrow reveal">(03) Where this shows up</p>
-    <div class="section-head reveal" style="margin-top:14px;">
-      <h2 data-lines>The kind of projects <em>we take on</em>.</h2>
-    </div>
-    <a class="services-preview reveal" href="services.html">
-      <img src="images/solar-farm-aerial.jpg" alt="Aerial view of a utility-scale solar array">
-      <div class="services-preview-content">
-        <h3>Residential, commercial &amp; land.</h3>
-        <p>Representative project types across the regions we work in — your estimate is the same math, tuned to your roof.</p>
-        <span class="process-more">Explore our work <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      </div>
-    </a>
-  </div>
-</section>
-
 <section class="t-rust">
   <div class="wrap">
     <div class="estimate-band reveal">
       <p class="eyebrow" style="justify-content:center; display:flex;">(04) Savings &amp; estimate</p>
       <h2 data-lines style="margin-top:14px;">What could <em>your</em> roof do?</h2>
-      <p>Three quick questions and an honest, numbered answer — not a "request a callback" form.</p>
-      <a class="btn btn-primary" href="estimate.html"><span>Run my free estimate →</span></a>
+      <p>Drag the slider — the numbers update live. No form, no call required.</p>
+    </div>
+    <div class="quick-calc reveal">
+      <div class="qc-input">
+        <label for="qcBill">Average monthly electricity bill</label>
+        <div class="bill-row">
+          <input type="range" id="qcBill" min="80" max="600" step="10" value="240">
+          <span class="bill-readout" id="qcBillReadout">$240</span>
+        </div>
+      </div>
+      <div class="qc-results">
+        <div class="qc-result"><span class="label">System size</span><span class="value" id="qcSize">—</span></div>
+        <div class="qc-result"><span class="label">Annual savings</span><span class="value" id="qcSavings">—</span></div>
+        <div class="qc-result"><span class="label">Payback</span><span class="value" id="qcPayback">—</span></div>
+      </div>
+      <div class="qc-foot">
+        <p class="qc-note">Assumes Queenstown Lakes sun hours, NE-facing roof, no battery. Get your tuned numbers below.</p>
+        <a class="btn btn-primary" href="estimate.html"><span>Get my full estimate →</span></a>
+      </div>
     </div>
   </div>
 </section>
@@ -356,7 +373,11 @@
         <span>+64 22 646 1996 <button class="copy-btn" data-copy="+64 22 646 1996">Copy</button></span>
         <span style="word-break:break-word;">anjana@watthausstrategy.co.nz <button class="copy-btn" data-copy="anjana@watthausstrategy.co.nz">Copy</button></span>
         <a href="https://www.watthausstrategy.co.nz" target="_blank" rel="noopener">www.watthausstrategy.co.nz</a>
-        <a href="https://www.linkedin.com/company/watthaus-strategy-ltd/" target="_blank" rel="noopener">LinkedIn →</a>
+        <span style="opacity:.55; font-size:13px;">4/51 Point England Road, Auckland</span>
+        <span style="display:flex; gap:14px;">
+          <a href="https://www.linkedin.com/company/watthaus-strategy-ltd/" target="_blank" rel="noopener">LinkedIn →</a>
+          <a href="https://www.instagram.com/watthaussolar" target="_blank" rel="noopener">Instagram →</a>
+        </span>
       </div>
     </div>
   </div>

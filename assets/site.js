@@ -390,6 +390,36 @@
     }
   } catch (e) {}
 
+  /* ---------- quick live savings calculator (home) ---------- */
+  try {
+    var qcBill = document.getElementById('qcBill');
+    if (qcBill){
+      var qcBillReadout = document.getElementById('qcBillReadout');
+      var qcSize = document.getElementById('qcSize');
+      var qcSavings = document.getElementById('qcSavings');
+      var qcPayback = document.getElementById('qcPayback');
+      var QC_SUN_HOURS = 4.0, QC_ORIENTATION = 0.93, QC_PRICE_PER_KWH = 0.31, QC_DERATE = 0.80, QC_OFFSET = 0.55;
+      function qcCalc(){
+        var bill = parseFloat(qcBill.value);
+        qcBillReadout.textContent = '$' + bill;
+        var annualUsage = (bill * 12) / QC_PRICE_PER_KWH;
+        var targetOffset = annualUsage * QC_OFFSET;
+        var sizeKw = targetOffset / (QC_SUN_HOURS * 365 * QC_ORIENTATION * QC_DERATE);
+        sizeKw = Math.max(2, Math.min(15, Math.round(sizeKw * 2) / 2));
+        var annualGen = sizeKw * QC_SUN_HOURS * 365 * QC_ORIENTATION * QC_DERATE;
+        var annualSavings = annualGen * QC_PRICE_PER_KWH * 0.9;
+        var costPerKw = sizeKw <= 4 ? 2500 : (sizeKw <= 8 ? 2250 : 2100);
+        var installedCost = sizeKw * costPerKw;
+        var paybackYears = installedCost / annualSavings;
+        qcSize.textContent = sizeKw.toFixed(1) + ' kW';
+        qcSavings.textContent = '$' + Math.round(annualSavings).toLocaleString('en-NZ') + '/yr';
+        qcPayback.textContent = paybackYears.toFixed(1) + ' yrs';
+      }
+      qcBill.addEventListener('input', qcCalc);
+      qcCalc();
+    }
+  } catch (e) {}
+
   /* ---------- guides email signup (demo capture, no backend) ---------- */
   try {
     var guidesForm = document.getElementById('guidesForm');
@@ -516,6 +546,137 @@
     el.dataset.raw = to;
   }
 
+  /* ---------- 20-year grid-vs-solar cost chart ---------- */
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  function fmtCompact(n){
+    if (Math.abs(n) >= 1000000) return '$' + (n / 1000000).toFixed(1) + 'M';
+    if (Math.abs(n) >= 1000) return '$' + Math.round(n / 1000) + 'K';
+    return '$' + Math.round(n);
+  }
+  function renderSavingsChart(bill, annualSavings, installedCost){
+    var svg = document.getElementById('savingsChartSvg');
+    var tooltip = document.getElementById('savingsTooltip');
+    if (!svg || !tooltip) return;
+    var W = 680, H = 300, ML = 54, MR = 16, MT = 16, MB = 32;
+    var PW = W - ML - MR, PH = H - MT - MB;
+    var GRID_COLOR = '#3987e5', SOLAR_COLOR = '#c98500';
+
+    var INFLATION = 1.04, MAINT = 150;
+    var annualBillFull = Math.max(1, bill * 12);
+    var savingsRatio = Math.max(0, Math.min(0.95, annualSavings / annualBillFull));
+    var years = [0], gridVals = [0], solarVals = [installedCost];
+    var gridCum = 0, solarCum = installedCost;
+    for (var y = 1; y <= 20; y++){
+      var yearBill = annualBillFull * Math.pow(INFLATION, y - 1);
+      gridCum += yearBill;
+      solarCum += yearBill * (1 - savingsRatio) + MAINT;
+      years.push(y); gridVals.push(gridCum); solarVals.push(solarCum);
+    }
+    var maxVal = Math.max(gridVals[gridVals.length - 1], solarVals[solarVals.length - 1]) * 1.08;
+
+    function xAt(year){ return ML + (year / 20) * PW; }
+    function yAt(val){ return MT + PH - (val / maxVal) * PH; }
+
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var steps = 4;
+    for (var s = 0; s <= steps; s++){
+      var val = (maxVal / steps) * s;
+      var gy = yAt(val);
+      var line = document.createElementNS(SVG_NS, 'line');
+      line.setAttribute('x1', ML); line.setAttribute('x2', W - MR);
+      line.setAttribute('y1', gy); line.setAttribute('y2', gy);
+      line.setAttribute('class', 'sc-grid');
+      svg.appendChild(line);
+      var lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', ML - 8); lbl.setAttribute('y', gy + 3);
+      lbl.setAttribute('text-anchor', 'end');
+      lbl.setAttribute('class', 'sc-axis-label');
+      lbl.textContent = fmtCompact(val);
+      svg.appendChild(lbl);
+    }
+    [0, 5, 10, 15, 20].forEach(function(yr){
+      var lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', xAt(yr)); lbl.setAttribute('y', H - 10);
+      lbl.setAttribute('text-anchor', yr === 0 ? 'start' : (yr === 20 ? 'end' : 'middle'));
+      lbl.setAttribute('class', 'sc-axis-label');
+      lbl.textContent = yr === 0 ? 'Now' : 'Yr ' + yr;
+      svg.appendChild(lbl);
+    });
+
+    function buildPath(vals){
+      return vals.map(function(v, i){ return (i === 0 ? 'M' : 'L') + xAt(years[i]).toFixed(1) + ',' + yAt(v).toFixed(1); }).join(' ');
+    }
+    var gridPath = document.createElementNS(SVG_NS, 'path');
+    gridPath.setAttribute('d', buildPath(gridVals));
+    gridPath.setAttribute('class', 'sc-line');
+    gridPath.setAttribute('stroke', GRID_COLOR);
+    svg.appendChild(gridPath);
+
+    var solarPath = document.createElementNS(SVG_NS, 'path');
+    solarPath.setAttribute('d', buildPath(solarVals));
+    solarPath.setAttribute('class', 'sc-line');
+    solarPath.setAttribute('stroke', SOLAR_COLOR);
+    svg.appendChild(solarPath);
+
+    function endMark(vals, color, dy){
+      var lastX = xAt(20), lastY = yAt(vals[vals.length - 1]);
+      var dot = document.createElementNS(SVG_NS, 'circle');
+      dot.setAttribute('cx', lastX); dot.setAttribute('cy', lastY); dot.setAttribute('r', 4.5);
+      dot.setAttribute('fill', color); dot.setAttribute('class', 'sc-dot');
+      svg.appendChild(dot);
+      var lbl = document.createElementNS(SVG_NS, 'text');
+      lbl.setAttribute('x', Math.min(lastX, W - MR - 6)); lbl.setAttribute('y', lastY + dy);
+      lbl.setAttribute('class', 'sc-end-label'); lbl.setAttribute('fill', 'var(--cream)');
+      lbl.setAttribute('text-anchor', 'end');
+      lbl.textContent = fmtCompact(vals[vals.length - 1]);
+      svg.appendChild(lbl);
+    }
+    endMark(gridVals, GRID_COLOR, -10);
+    endMark(solarVals, SOLAR_COLOR, 16);
+
+    var hit = document.createElementNS(SVG_NS, 'rect');
+    hit.setAttribute('x', ML); hit.setAttribute('y', MT); hit.setAttribute('width', PW); hit.setAttribute('height', PH);
+    hit.setAttribute('class', 'sc-hit');
+    svg.appendChild(hit);
+
+    var crosshair = document.createElementNS(SVG_NS, 'line');
+    crosshair.setAttribute('y1', MT); crosshair.setAttribute('y2', MT + PH);
+    crosshair.setAttribute('x1', ML); crosshair.setAttribute('x2', ML);
+    crosshair.setAttribute('class', 'sc-crosshair');
+    crosshair.style.opacity = '0';
+    svg.appendChild(crosshair);
+
+    function showTip(evt){
+      var rect = svg.getBoundingClientRect();
+      var px = (evt.clientX - rect.left) / rect.width * W;
+      var yearFrac = Math.max(0, Math.min(20, ((px - ML) / PW) * 20));
+      var yearIdx = Math.round(yearFrac);
+      var cx = xAt(yearIdx);
+      crosshair.setAttribute('x1', cx); crosshair.setAttribute('x2', cx);
+      crosshair.style.opacity = '1';
+      tooltip.style.left = ((cx / W) * 100) + '%';
+      tooltip.style.top = ((MT / H) * 100) + '%';
+      tooltip.innerHTML = '';
+      var yearRow = document.createElement('div');
+      yearRow.className = 'sct-year';
+      yearRow.textContent = yearIdx === 0 ? 'Right now' : 'Year ' + yearIdx;
+      tooltip.appendChild(yearRow);
+      [['Grid only', gridVals[yearIdx], GRID_COLOR], ['Solar + Watthaus', solarVals[yearIdx], SOLAR_COLOR]].forEach(function(row){
+        var r = document.createElement('div'); r.className = 'sct-row';
+        var key = document.createElement('span'); key.className = 'sct-key'; key.style.background = row[2];
+        var name = document.createElement('span'); name.className = 'sct-name'; name.textContent = row[0];
+        var v = document.createElement('span'); v.className = 'sct-value'; v.textContent = fmtCompact(row[1]);
+        r.appendChild(key); r.appendChild(name); r.appendChild(v);
+        tooltip.appendChild(r);
+      });
+      tooltip.classList.add('is-visible');
+    }
+    function hideTip(){ tooltip.classList.remove('is-visible'); crosshair.style.opacity = '0'; }
+    hit.addEventListener('pointermove', showTip);
+    hit.addEventListener('pointerleave', hideTip);
+  }
+
   function calculate(){
     var sunHours = parseFloat(regionSel.value);
     var orientation = parseFloat(document.getElementById('orientation').value);
@@ -554,6 +715,8 @@
     var ring = document.getElementById('gaugeRing');
     if (hasGsap) gsap.to(ring, { strokeDashoffset: circumference * (1-ratio), duration: 1, ease: 'power2.out' });
     else ring.setAttribute('stroke-dashoffset', circumference * (1-ratio));
+
+    try { renderSavingsChart(bill, annualSavings, installedCost); } catch (e) {}
   }
 
   wizForm.addEventListener('submit', function(e){

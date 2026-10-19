@@ -166,6 +166,17 @@
             <div class="result-tile"><span class="label">10-yr net benefit</span><span class="value" id="rTenYear">—</span><span class="result-note">after install cost</span></div>
           </div>
           <p class="result-note">Estimated installed cost <strong id="rCost">—</strong> · CO₂ avoided <strong id="rCo2">—</strong>/yr. Ballpark only — your exact number is confirmed on a free site assessment.</p>
+          <div class="savings-chart">
+            <div class="savings-chart-head">
+              <h3>20-year cost: grid vs. solar</h3>
+              <div class="savings-chart-legend">
+                <span class="key"><i style="background:#3987e5"></i>Grid only</span>
+                <span class="key"><i style="background:#c98500"></i>Solar + Watthaus</span>
+              </div>
+            </div>
+            <svg id="savingsChartSvg" viewBox="0 0 680 300" role="img" aria-label="Line chart comparing 20-year cumulative cost of staying on the grid versus switching to solar"></svg>
+            <div class="savings-chart-tooltip" id="savingsTooltip"></div>
+          </div>
           <div class="result-cta">
             <p style="max-width:44ch; font-size:14px;">Like what you see? Lock in a free site visit and we'll turn this into a signed-off design.</p>
             <button type="button" class="btn btn-primary" data-next><span>Book my site visit →</span></button>
@@ -252,6 +263,24 @@
   </div>
 </section>
 
+<section class="t-forest">
+  <div class="wrap">
+    <p class="eyebrow reveal">Financing options</p>
+    <div class="section-head reveal" style="margin-top:14px; margin-bottom:30px;">
+      <h2 data-lines>Pay as you save,<br>or <em>own it</em> outright.</h2>
+      <p class="sub">Real partner finance — not a vague "$0-down" promise.</p>
+    </div>
+    <div class="partners-grid is-banks">
+      <div class="partner-tile reveal"><span class="pt-label">Interest-free 5 years</span><span class="pt-name">Westpac</span><span class="pt-offer">Greater Choices &middot; up to $50,000</span></div>
+      <div class="partner-tile reveal"><span class="pt-label">1% p.a. for 3 years</span><span class="pt-name">ANZ</span><span class="pt-offer">Good Energy Home Loan &middot; up to $80,000</span></div>
+      <div class="partner-tile reveal"><span class="pt-label">3-year fixed rate</span><span class="pt-name">ASB</span><span class="pt-offer">Better Homes Top Up &middot; up to $80,000</span></div>
+      <div class="partner-tile reveal"><span class="pt-label">1% p.a. for 3 years</span><span class="pt-name">BNZ</span><span class="pt-offer">Green Home Loan Top-Up &middot; up to $80,000</span></div>
+      <div class="partner-tile reveal"><span class="pt-label">36 months interest-free</span><span class="pt-name">Q Card</span><span class="pt-offer">On purchases over $1,000</span></div>
+      <div class="partner-tile reveal"><span class="pt-label">4-year term</span><span class="pt-name">Kiwibank</span><span class="pt-offer">Sustainable Energy Loan &middot; up to $20,000</span></div>
+    </div>
+  </div>
+</section>
+
 <section id="faq" class="t-ink">
   <div class="wrap">
     <p class="eyebrow reveal">(05) FAQ</p>
@@ -320,7 +349,11 @@
         <span>+64 22 646 1996 <button class="copy-btn" data-copy="+64 22 646 1996">Copy</button></span>
         <span style="word-break:break-word;">anjana@watthausstrategy.co.nz <button class="copy-btn" data-copy="anjana@watthausstrategy.co.nz">Copy</button></span>
         <a href="https://www.watthausstrategy.co.nz" target="_blank" rel="noopener">www.watthausstrategy.co.nz</a>
-        <a href="https://www.linkedin.com/company/watthaus-strategy-ltd/" target="_blank" rel="noopener">LinkedIn →</a>
+        <span style="opacity:.55; font-size:13px;">4/51 Point England Road, Auckland</span>
+        <span style="display:flex; gap:14px;">
+          <a href="https://www.linkedin.com/company/watthaus-strategy-ltd/" target="_blank" rel="noopener">LinkedIn →</a>
+          <a href="https://www.instagram.com/watthaussolar" target="_blank" rel="noopener">Instagram →</a>
+        </span>
       </div>
     </div>
   </div>

@@ -421,7 +421,16 @@
     var wm = document.getElementById('footWordmark');
     if (wm){
       wm.innerHTML = wm.textContent.split('').map(function(ch){ return ch === ' ' ? ' ' : '<span class="fw-char">' + ch + '</span>'; }).join('');
-      gsap.from(wm.querySelectorAll('.fw-char'), { yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: 0.035,
+      /* the gradient is clipped per-character (see CSS), so give each span the same background-size
+         spanning the whole word and offset its background-position by its own pixel position —
+         that makes every char show its correct slice of one continuous sweep instead of N repeats */
+      var chars = wm.querySelectorAll('.fw-char');
+      var total = wm.offsetWidth;
+      chars.forEach(function(span){
+        span.style.backgroundSize = total + 'px 100%';
+        span.style.backgroundPosition = (-span.offsetLeft) + 'px 0';
+      });
+      gsap.from(chars, { yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: 0.035,
         scrollTrigger: { trigger: wm, start: 'top 95%' } });
     }
   }

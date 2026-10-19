@@ -170,7 +170,11 @@
       <h2 data-lines>Real <em>packages</em>, <br>priced up front.</h2>
       <p class="sub">The same CEC-certified JA Solar + Sigenergy packages Watthaus installs — with indicative pricing most installers won't show you until the sales call.</p>
     </div>
-    <div class="pricing-grid">
+    <div class="pkg-tabs reveal" role="tablist">
+      <button class="pkg-tab is-active" data-pkg-tab="grid" role="tab" aria-selected="true">Grid Tie</button>
+      <button class="pkg-tab" data-pkg-tab="hybrid" role="tab" aria-selected="false">Hybrid + Battery</button>
+    </div>
+    <div class="pricing-grid" data-pkg-panel="grid">
       <div class="price-card reveal">
         <div class="p-tag">Bright Start</div>
         <div>
@@ -185,8 +189,8 @@
         </ul>
         <a class="btn btn-ghost" href="estimate.html"><span>Get this quote →</span></a>
       </div>
-      <div class="price-card reveal">
-        <div class="p-tag">Bright Boost</div>
+      <div class="price-card is-popular reveal">
+        <div class="p-tag">Bright Boost<span class="p-badge">Most popular</span></div>
         <div>
           <div class="p-price">~$32,000</div>
           <div class="p-from">30 &times; 510W JA Solar &middot; 10kW Sigenergy</div>
@@ -197,10 +201,12 @@
           <li>Real-time Sigen app monitoring</li>
           <li>10-year workmanship warranty</li>
         </ul>
-        <a class="btn btn-ghost" href="estimate.html"><span>Get this quote →</span></a>
+        <a class="btn btn-primary" href="estimate.html"><span>Get this quote →</span></a>
       </div>
-      <div class="price-card is-popular reveal">
-        <div class="p-tag">Sunny Reserve<span class="p-badge">Most popular</span></div>
+    </div>
+    <div class="pricing-grid" data-pkg-panel="hybrid" hidden>
+      <div class="price-card reveal">
+        <div class="p-tag">Sunny Reserve</div>
         <div>
           <div class="p-price">~$29,000</div>
           <div class="p-from">16 &times; 510W JA Solar &middot; 6kWh SigenStor</div>
@@ -211,10 +217,10 @@
           <li>Real-time Sigen app monitoring</li>
           <li>10-year workmanship warranty</li>
         </ul>
-        <a class="btn btn-primary" href="estimate.html"><span>Get this quote →</span></a>
+        <a class="btn btn-ghost" href="estimate.html"><span>Get this quote →</span></a>
       </div>
-      <div class="price-card reveal">
-        <div class="p-tag">Sunny Reserve Plus</div>
+      <div class="price-card is-popular reveal">
+        <div class="p-tag">Sunny Reserve Plus<span class="p-badge">Most popular</span></div>
         <div>
           <div class="p-price">~$44,000</div>
           <div class="p-from">30 &times; 510W JA Solar &middot; 10kWh SigenStor</div>
@@ -225,7 +231,7 @@
           <li>Real-time Sigen app monitoring</li>
           <li>10-year workmanship warranty</li>
         </ul>
-        <a class="btn btn-ghost" href="estimate.html"><span>Get this quote →</span></a>
+        <a class="btn btn-primary" href="estimate.html"><span>Get this quote →</span></a>
       </div>
     </div>
     <p class="qc-note reveal" style="margin-top:22px; max-width:none;">Prices are indicative and GST-inclusive; a free site assessment confirms your fixed quote. Larger or commercial &amp; utility-scale project? <a href="approach.html" style="color:var(--gold-light); text-decoration:underline;">See our land, engineering &amp; construction services →</a></p>

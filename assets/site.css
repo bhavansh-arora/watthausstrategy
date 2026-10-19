@@ -384,7 +384,11 @@ section{padding-block:104px; position:relative;}
 /* growth / referral cards reuse .process-preview + .pp-card */
 
 /* pricing / packages */
-.pricing-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:44px;}
+.pkg-tabs{display:inline-flex; gap:6px; margin-top:36px; padding:5px; background:rgba(243,238,226,.05); border:1px solid rgba(243,238,226,.14); border-radius:999px;}
+.pkg-tab{font-family:var(--font-display); font-weight:600; font-size:13.5px; letter-spacing:.01em; color:var(--muted); background:none; border:none; cursor:pointer; padding:11px 22px; border-radius:999px; transition:background .25s, color .25s;}
+.pkg-tab.is-active{background:var(--gold); color:#1A1204;}
+.pricing-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:20px; margin-top:24px;}
+.pricing-grid[hidden]{display:none;}
 .price-card{background:rgba(243,238,226,.04); border:1px solid rgba(243,238,226,.14); border-radius:20px; padding:34px 30px; display:flex; flex-direction:column; gap:20px;}
 .price-card.is-popular{border-color:var(--gold); background:rgba(217,166,78,.07);}
 .price-card .p-tag{font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); display:flex; justify-content:space-between; align-items:center; min-height:20px;}

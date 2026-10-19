@@ -154,7 +154,7 @@
   if ('IntersectionObserver' in window){
     var headIO = new IntersectionObserver(function(entries){
       entries.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('is-in'); headIO.unobserve(en.target); } });
-    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.1 });
+    }, { rootMargin: '0px 0px 15% 0px', threshold: 0.01 });
     headingEls.forEach(function(el){ headIO.observe(el); });
   } else {
     headingEls.forEach(function(el){ el.classList.add('is-in'); });
@@ -164,12 +164,12 @@
   if (hasGsap){
     html.classList.add('js-anim');
     gsap.utils.toArray('.reveal').forEach(function(el, i){
-      gsap.to(el, { opacity: 1, y: 0, duration: .8, ease: 'power3.out', delay: (i % 3) * 0.05,
-        scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
+      gsap.to(el, { opacity: 1, y: 0, duration: .6, ease: 'power3.out', delay: (i % 3) * 0.04,
+        scrollTrigger: { trigger: el, start: 'top 97%', once: true } });
     });
     ['.faq-item'].forEach(function(sel){
       var els = gsap.utils.toArray(sel).filter(function(el){ return !el.classList.contains('reveal'); });
-      if (els.length) ScrollTrigger.batch(els, { start: 'top 90%',
+      if (els.length) ScrollTrigger.batch(els, { start: 'top 97%',
         onEnter: function(batch){ gsap.to(batch, { opacity: 1, y: 0, duration: .7, stagger: .08, ease: 'power3.out', overwrite: true }); } });
     });
   }
@@ -375,6 +375,21 @@
         else { item.classList.add('open'); a.style.maxHeight = inner.offsetHeight + 'px'; }
       });
     });
+  } catch (e) {}
+
+  /* ---------- package tabs (Grid Tie / Hybrid + Battery) ---------- */
+  try {
+    var pkgTabs = Array.prototype.slice.call(document.querySelectorAll('.pkg-tab'));
+    if (pkgTabs.length){
+      var pkgPanels = Array.prototype.slice.call(document.querySelectorAll('[data-pkg-panel]'));
+      pkgTabs.forEach(function(tab){
+        tab.addEventListener('click', function(){
+          var target = tab.getAttribute('data-pkg-tab');
+          pkgTabs.forEach(function(t){ t.classList.toggle('is-active', t === tab); t.setAttribute('aria-selected', t === tab ? 'true' : 'false'); });
+          pkgPanels.forEach(function(p){ p.hidden = p.getAttribute('data-pkg-panel') !== target; });
+        });
+      });
+    }
   } catch (e) {}
 
   /* ---------- hero quick form -> save region + go to estimate page ---------- */

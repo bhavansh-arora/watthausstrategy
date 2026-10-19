@@ -177,7 +177,7 @@
 
   /* ---------- velocity-aware ticker + keyword band ---------- */
   try { (function(){
-    var tracks = [document.getElementById('tickerTrack'), document.getElementById('keywordTrack'), document.getElementById('partnersTrack')].filter(Boolean);
+    var tracks = [document.getElementById('tickerTrack'), document.getElementById('keywordTrack')].filter(Boolean);
     if (!tracks.length) return;
     /* Guarantee each half has enough repeated content to never gap, on any monitor width. */
     tracks.forEach(function(track){
@@ -210,6 +210,86 @@
       requestAnimationFrame(loop);
     })();
   })(); } catch (e) {}
+
+  /* ---------- partner logo marquee: draggable, with a coverflow-style center scale ---------- */
+  try {
+    Array.prototype.slice.call(document.querySelectorAll('.pm-track')).forEach(function(track){
+      var wrap = track.closest('.partners-marquee');
+      if (!wrap) return;
+
+      var sets = Array.prototype.slice.call(track.children);
+      var target = Math.max(window.innerWidth, 2400) * 1.3;
+      sets.forEach(function(set){
+        var baseHTML = set.innerHTML;
+        var guard = 0;
+        while (set.scrollWidth < target && guard < 12){ set.innerHTML += baseHTML; guard++; }
+      });
+
+      var pos = 0, dragging = false, dragStartX = 0, dragStartPos = 0;
+      var dragVelocity = 0, lastDragX = 0, lastDragT = 0;
+      var baseSpeed = 0.45;
+
+      function wrapPos(){
+        var half = track.scrollWidth / 2;
+        if (half > 0){ if (pos <= -half) pos += half; if (pos > 0) pos -= half; }
+      }
+
+      track.classList.add('is-draggable');
+      track.addEventListener('dragstart', function(e){ e.preventDefault(); });
+      track.addEventListener('pointerdown', function(e){
+        dragging = true;
+        try { track.setPointerCapture(e.pointerId); } catch (err) {}
+        dragStartX = e.clientX; dragStartPos = pos; lastDragX = e.clientX; lastDragT = performance.now();
+        dragVelocity = 0;
+        track.classList.add('is-dragging');
+      });
+      track.addEventListener('pointermove', function(e){
+        if (!dragging) return;
+        pos = dragStartPos + (e.clientX - dragStartX);
+        wrapPos();
+        var now = performance.now(), dt = now - lastDragT;
+        if (dt > 8){ dragVelocity = (e.clientX - lastDragX) / dt; lastDragX = e.clientX; lastDragT = now; }
+      });
+      function endDrag(){
+        if (!dragging) return;
+        dragging = false;
+        track.classList.remove('is-dragging');
+      }
+      track.addEventListener('pointerup', endDrag);
+      track.addEventListener('pointercancel', endDrag);
+      track.addEventListener('pointerleave', endDrag);
+
+      if (reducedMotion){ return; }
+
+      (function loop(){
+        if (dragging){
+          // live-drag already set pos directly above
+        } else if (Math.abs(dragVelocity) > 0.02){
+          pos += dragVelocity * 16;
+          dragVelocity *= 0.94;
+          wrapPos();
+        } else {
+          pos -= baseSpeed;
+          wrapPos();
+        }
+        track.style.transform = 'translate3d(' + pos.toFixed(2) + 'px,0,0)';
+
+        var logos = track.querySelectorAll('.pm-logo');
+        var wrapRect = wrap.getBoundingClientRect();
+        var centerX = wrapRect.left + wrapRect.width / 2;
+        var rects = [];
+        for (var i = 0; i < logos.length; i++) rects.push(logos[i].getBoundingClientRect());
+        for (var j = 0; j < logos.length; j++){
+          var r = rects[j];
+          var dist = Math.abs((r.left + r.width / 2) - centerX);
+          var norm = Math.min(1, dist / (wrapRect.width / 2 + 80));
+          var scale = 1.1 - norm * 0.24;
+          logos[j].style.transform = 'scale(' + scale.toFixed(3) + ')';
+        }
+        requestAnimationFrame(loop);
+      })();
+    });
+  } catch (e) {}
 
   /* ---------- hero / page-header / closing parallax ---------- */
   try {

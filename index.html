@@ -105,11 +105,16 @@ nav.is-hidden{transform:translateY(-100%);}
 .check-ic svg{width:8px; height:8px;}
 
 /* ---------- floating rotating CTA badge ---------- */
-.spin-cta{position:fixed; right:max(20px,env(safe-area-inset-right,0px)); bottom:max(20px,env(safe-area-inset-bottom,0px)); width:92px; height:92px; z-index:55; cursor:pointer;}
-.spin-cta svg{width:100%; height:100%;}
-.spin-cta__ring{animation:spin 14s linear infinite;}
-@media (prefers-reduced-motion:reduce){ .spin-cta__ring{animation:none;} }
-.spin-cta__dot{position:absolute; inset:0; display:flex; align-items:center; justify-content:center;}
+.spin-cta{position:fixed; right:max(20px,env(safe-area-inset-right,0px)); bottom:max(20px,env(safe-area-inset-bottom,0px)); width:96px; height:96px; z-index:55; cursor:pointer; transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+.spin-cta:hover{transform:scale(1.07);}
+.spin-cta:hover .spin-cta__ring{animation-play-state:paused;}
+.spin-cta svg{width:100%; height:100%; overflow:visible;}
+.spin-cta__glow{animation:spinGlow 3.2s ease-in-out infinite;}
+.spin-cta__ring{animation:spin 22s linear infinite; transform-origin:50px 50px;}
+@keyframes spinGlow{0%,100%{opacity:.35;}50%{opacity:.75;}}
+@media (prefers-reduced-motion:reduce){ .spin-cta__ring{animation:none;} .spin-cta__glow{animation:none; opacity:.5;} }
+.spin-cta__dot{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; transition:transform .35s cubic-bezier(.2,.8,.2,1);}
+.spin-cta:hover .spin-cta__dot{transform:scale(1.12) translate(1px,-1px);}
 @keyframes spin{to{transform:rotate(360deg);}}
 @media (max-width:760px){ .spin-cta{display:none;} }
 
@@ -303,8 +308,8 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker__track" id="tickerTrack">
-    <span>☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a></span>
-    <span>☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a></span>
+    <span>☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a>&nbsp;&nbsp;&nbsp;&nbsp;☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a>&nbsp;&nbsp;&nbsp;&nbsp;☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a></span>
+    <span>☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a>&nbsp;&nbsp;&nbsp;&nbsp;☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a>&nbsp;&nbsp;&nbsp;&nbsp;☀ FREE SITE ASSESSMENTS — NO OBLIGATION <a href="#estimate" style="text-decoration:underline;">GET YOUR ESTIMATE →</a></span>
   </div>
 </div>
 
@@ -339,11 +344,18 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
 
 <div class="spin-cta" id="spinCta">
   <svg viewBox="0 0 100 100">
-    <defs><path id="spinPath" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs>
-    <circle cx="50" cy="50" r="46" fill="rgba(13,19,15,.65)" stroke="var(--gold)" stroke-width="1"/>
+    <defs>
+      <path id="spinPath" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/>
+      <radialGradient id="spinGlowGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="55%" stop-color="var(--gold)" stop-opacity="0"/>
+        <stop offset="100%" stop-color="var(--gold)" stop-opacity=".45"/>
+      </radialGradient>
+    </defs>
+    <circle class="spin-cta__glow" cx="50" cy="50" r="49" fill="url(#spinGlowGrad)"/>
+    <circle cx="50" cy="50" r="46" fill="rgba(13,19,15,.72)" stroke="var(--gold)" stroke-width="1"/>
     <g class="spin-cta__ring">
-      <text font-family="Geist Mono, monospace" font-size="8.6" letter-spacing="2" fill="var(--gold-light)">
-        <textPath href="#spinPath">GET YOUR ESTIMATE · GET YOUR ESTIMATE ·</textPath>
+      <text font-family="Geist Mono, monospace" font-size="7.6" letter-spacing=".5" fill="var(--gold-light)">
+        <textPath href="#spinPath" startOffset="2">GET YOUR ESTIMATE&#8201;·&#8201;&#8201;GET YOUR ESTIMATE&#8201;·&#8201;&#8201;</textPath>
       </text>
     </g>
   </svg>
@@ -440,8 +452,8 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
 
 <div class="keyword-band t-ink" aria-hidden="true">
   <div class="keyword-track" id="keywordTrack">
-    <span>Residential<span class="dot"></span><em>Commercial</em><span class="dot"></span>Land Acquisition<span class="dot"></span><em>Finance</em><span class="dot"></span>CEC-Certified<span class="dot"></span><em>Nationwide</em></span>
-    <span>Residential<span class="dot"></span><em>Commercial</em><span class="dot"></span>Land Acquisition<span class="dot"></span><em>Finance</em><span class="dot"></span>CEC-Certified<span class="dot"></span><em>Nationwide</em></span>
+    <span>Residential<span class="dot"></span><em>Commercial</em><span class="dot"></span>Land Acquisition<span class="dot"></span><em>Finance</em><span class="dot"></span>CEC-Certified<span class="dot"></span><em>Nationwide</em><span class="dot"></span>Residential<span class="dot"></span><em>Commercial</em><span class="dot"></span>Land Acquisition<span class="dot"></span><em>Finance</em><span class="dot"></span>CEC-Certified<span class="dot"></span><em>Nationwide</em></span>
+    <span>Residential<span class="dot"></span><em>Commercial</em><span class="dot"></span>Land Acquisition<span class="dot"></span><em>Finance</em><span class="dot"></span>CEC-Certified<span class="dot"></span><em>Nationwide</em><span class="dot"></span>Residential<span class="dot"></span><em>Commercial</em><span class="dot"></span>Land Acquisition<span class="dot"></span><em>Finance</em><span class="dot"></span>CEC-Certified<span class="dot"></span><em>Nationwide</em></span>
   </div>
 </div>
 
@@ -805,54 +817,63 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
   if (hasGsap) html.classList.add('has-gsap');
 
-  var toggle = document.getElementById('menuToggle');
   var overlay = document.getElementById('overlayMenu');
-  var closeBtn = document.getElementById('overlayClose');
-  function openMenu(){ overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
-  function closeMenu(){ overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
-  toggle.addEventListener('click', openMenu);
-  closeBtn.addEventListener('click', closeMenu);
-  overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
-  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
 
-  document.querySelectorAll('a[href^="#"]').forEach(function(a){
-    a.addEventListener('click', function(e){
-      var id = a.getAttribute('href');
-      if (!id || id.length < 2) return;
-      var target = document.querySelector(id);
-      if (!target) return;
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  try {
+    var toggle = document.getElementById('menuToggle');
+    var closeBtn = document.getElementById('overlayClose');
+    function openMenu(){ overlay.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+    function closeMenu(){ overlay.classList.remove('open'); toggle.setAttribute('aria-expanded','false'); }
+    toggle.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    overlay.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMenu); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeMenu(); });
+  } catch (e) {}
+
+  try {
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href');
+        if (!id || id.length < 2) return;
+        var target = document.querySelector(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
     });
-  });
-  document.getElementById('footCta').addEventListener('click', function(){
-    document.getElementById('estimate').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+    var footCtaBtn = document.getElementById('footCta');
+    if (footCtaBtn) footCtaBtn.addEventListener('click', function(){
+      document.getElementById('estimate').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  } catch (e) {}
 
   /* ---------- header hide/show on scroll ---------- */
-  var navEl = document.getElementById('siteNav');
-  var lastY = window.scrollY, navTicking = false;
-  var mobileCtaBar = document.getElementById('mobileCtaBar');
-  var closingEl = document.querySelector('.closing');
-  function onScroll(){
-    var y = window.scrollY;
-    if (navEl){
-      var hide = y > 420 && y > lastY + 4 && !overlay.classList.contains('open');
-      if (hide) navEl.classList.add('is-hidden');
-      else if (y < lastY - 4 || y < 420) navEl.classList.remove('is-hidden');
+  try {
+    var navEl = document.getElementById('siteNav');
+    var lastY = window.scrollY, navTicking = false;
+    var mobileCtaBar = document.getElementById('mobileCtaBar');
+    var closingEl = document.querySelector('.closing');
+    function onScroll(){
+      var y = window.scrollY;
+      if (navEl){
+        var hide = y > 420 && y > lastY + 4 && !overlay.classList.contains('open');
+        if (hide) navEl.classList.add('is-hidden');
+        else if (y < lastY - 4 || y < 420) navEl.classList.remove('is-hidden');
+      }
+      if (mobileCtaBar){
+        var heroH = document.querySelector('.hero').offsetHeight;
+        var pastHero = y > heroH * 0.6;
+        var reachedClosing = closingEl && (y + window.innerHeight) > (closingEl.offsetTop + 60);
+        mobileCtaBar.classList.toggle('is-visible', pastHero && !reachedClosing);
+      }
+      lastY = y; navTicking = false;
     }
-    if (mobileCtaBar){
-      var heroH = document.querySelector('.hero').offsetHeight;
-      var pastHero = y > heroH * 0.6;
-      var reachedClosing = closingEl && (y + window.innerHeight) > (closingEl.offsetTop + 60);
-      mobileCtaBar.classList.toggle('is-visible', pastHero && !reachedClosing);
-    }
-    lastY = y; navTicking = false;
-  }
-  window.addEventListener('scroll', function(){ if (!navTicking){ requestAnimationFrame(onScroll); navTicking = true; } }, { passive: true });
-  onScroll();
+    window.addEventListener('scroll', function(){ if (!navTicking){ requestAnimationFrame(onScroll); navTicking = true; } }, { passive: true });
+    onScroll();
+  } catch (e) {}
 
   /* ---------- word-mask heading split + reveal ---------- */
+  try {
   var wordIndex = 0;
   function splitWords(node){
     Array.prototype.slice.call(node.childNodes).forEach(function(child){
@@ -902,11 +923,22 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
         onEnter: function(batch){ gsap.to(batch, { opacity: 1, y: 0, duration: .7, stagger: .08, ease: 'power3.out', overwrite: true }); } });
     });
   }
+  } catch (e) {}
 
   /* ---------- velocity-aware ticker + keyword band ---------- */
-  (function(){
+  try { (function(){
     var tracks = [document.getElementById('tickerTrack'), document.getElementById('keywordTrack')].filter(Boolean);
     if (!tracks.length) return;
+    /* Guarantee each half has enough repeated content to never gap, on any monitor width. */
+    tracks.forEach(function(track){
+      var spans = Array.prototype.slice.call(track.children);
+      var target = Math.max(window.innerWidth, 2400) * 1.3;
+      spans.forEach(function(span){
+        var baseHTML = span.innerHTML;
+        var guard = 0;
+        while (span.scrollWidth < target && guard < 12){ span.innerHTML += baseHTML; guard++; }
+      });
+    });
     var scrollY = window.scrollY, velocity = 0, direction = 1;
     var positions = tracks.map(function(){ return 0; });
     (function sampleVelocity(){
@@ -927,9 +959,10 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
       });
       requestAnimationFrame(loop);
     })();
-  })();
+  })(); } catch (e) {}
 
   /* ---------- hero + closing parallax ---------- */
+  try {
   if (hasGsap){
     document.querySelectorAll('.hero-bg img, .closing-bg img').forEach(function(img){
       gsap.fromTo(img, { yPercent: -6, scale: 1.12 }, { yPercent: 6, scale: 1.12, ease: 'none',
@@ -940,8 +973,10 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
         scrollTrigger: { trigger: img.closest('.feature-card'), start: 'top bottom', end: 'bottom top', scrub: true } });
     });
   }
+  } catch (e) {}
 
   /* ---------- stacking process cards (desktop) ---------- */
+  try {
   if (hasGsap && window.innerWidth >= 900){
     var stackCards = gsap.utils.toArray('[data-stack] .stack-card');
     stackCards.forEach(function(card, i){
@@ -951,8 +986,10 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
       gsap.to(card, { scale: 0.96, ease: 'none', scrollTrigger: { trigger: next, start: 'top bottom', end: endPx, scrub: true } });
     });
   }
+  } catch (e) {}
 
   /* ---------- footer wordmark rise ---------- */
+  try {
   if (hasGsap){
     var wm = document.getElementById('footWordmark');
     if (wm){
@@ -961,9 +998,10 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
         scrollTrigger: { trigger: wm, start: 'top 95%' } });
     }
   }
+  } catch (e) {}
 
   /* ---------- spotlight carousel ---------- */
-  (function(){
+  try { (function(){
     var root = document.getElementById('spotlight');
     if (!root) return;
     var slides = Array.prototype.slice.call(root.querySelectorAll('.spotlight-slide'));
@@ -982,36 +1020,44 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
     document.getElementById('spotPrev').addEventListener('click', function(){ go(idx - 1); });
     document.getElementById('spotNext').addEventListener('click', function(){ go(idx + 1); });
     render(); restart();
-  })();
+  })(); } catch (e) {}
 
   /* ---------- floating spin CTA ---------- */
-  document.getElementById('spinCta').addEventListener('click', function(){
-    document.getElementById('estimate').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  try {
+    var spinCtaEl = document.getElementById('spinCta');
+    if (spinCtaEl) spinCtaEl.addEventListener('click', function(){
+      document.getElementById('estimate').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  } catch (e) {}
 
   /* ---------- FAQ accordion ---------- */
-  document.querySelectorAll('.faq-item').forEach(function(item){
-    var q = item.querySelector('.faq-q');
-    var a = item.querySelector('.faq-a');
-    var inner = item.querySelector('.faq-a-inner');
-    q.addEventListener('click', function(){
-      var isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item.open').forEach(function(other){
-        if (other !== item){ other.classList.remove('open'); other.querySelector('.faq-a').style.maxHeight = null; }
+  try {
+    document.querySelectorAll('.faq-item').forEach(function(item){
+      var q = item.querySelector('.faq-q');
+      var a = item.querySelector('.faq-a');
+      var inner = item.querySelector('.faq-a-inner');
+      q.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(function(other){
+          if (other !== item){ other.classList.remove('open'); other.querySelector('.faq-a').style.maxHeight = null; }
+        });
+        if (isOpen){ item.classList.remove('open'); a.style.maxHeight = null; }
+        else { item.classList.add('open'); a.style.maxHeight = inner.offsetHeight + 'px'; }
       });
-      if (isOpen){ item.classList.remove('open'); a.style.maxHeight = null; }
-      else { item.classList.add('open'); a.style.maxHeight = inner.offsetHeight + 'px'; }
     });
-  });
+  } catch (e) {}
 
   /* ---------- hero quick form -> scroll + seed region ---------- */
-  document.getElementById('heroForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    document.getElementById('region').value = document.getElementById('heroRegion').value;
-    document.getElementById('estimate').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  try {
+    document.getElementById('heroForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      document.getElementById('region').value = document.getElementById('heroRegion').value;
+      document.getElementById('estimate').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  } catch (e) {}
 
   /* ---------- wizard ---------- */
+  try {
   var panes = Array.prototype.slice.call(document.querySelectorAll('.wiz-pane'));
   var indicators = Array.prototype.slice.call(document.querySelectorAll('.wp-step'));
   var current = 0;
@@ -1156,5 +1202,6 @@ footer{background:var(--ink); border-top:1px solid var(--line);}
   });
 
   calculate();
+  } catch (e) {}
 })();
 </script>

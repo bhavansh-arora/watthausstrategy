@@ -257,6 +257,19 @@
   }
   } catch (e) {}
 
+  /* ---------- touch-device card activation (no real :hover on touch, so mirror it via scroll position) ---------- */
+  try {
+    if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window){
+      var touchCards = document.querySelectorAll('.feature-card, .sg-card');
+      if (touchCards.length){
+        var activeIO = new IntersectionObserver(function(entries){
+          entries.forEach(function(en){ en.target.classList.toggle('is-active', en.isIntersecting); });
+        }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+        touchCards.forEach(function(card){ activeIO.observe(card); });
+      }
+    }
+  } catch (e) {}
+
   /* ---------- scroll progress indicator ---------- */
   try {
     var navForProgress = document.getElementById('siteNav');

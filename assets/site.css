@@ -428,7 +428,7 @@ section{padding-block:104px; position:relative;}
    wordmark, or a logo with its own baked-in dark card) get a plate, so there's no stray box
    around every other logo */
 .partners-marquee .pm-logo.pm-logo-light::before{content:""; position:absolute; inset:10px 14px; background:rgba(243,238,226,.94); border-radius:12px; z-index:0;}
-.partners-marquee .pm-logo img{height:42px; width:auto; max-width:170px; object-fit:contain; image-rendering:-webkit-optimize-contrast;
+.partners-marquee .pm-logo img{height:42px; width:auto; max-width:170px; object-fit:contain;
   filter:saturate(.75) brightness(1.05); opacity:.88;
   transition:filter .4s ease, opacity .4s ease, transform .4s cubic-bezier(.2,.8,.2,1);}
 .partners-marquee .pm-logo.pm-logo-card img{height:72px;}

@@ -11,6 +11,10 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;}
+/* color-grade every photo into the site's palette, so photography reads as designed-in rather than pasted-on stock imagery */
+.hero-bg img, .closing-bg img, .feature-card img, .sg-card img, .services-preview img, .spotlight-slide img, .stack-card .media img{
+  filter:saturate(.8) contrast(1.05) brightness(.97) sepia(.06);
+}
 html,body{background:var(--ink);}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth;}}
 body{
@@ -274,7 +278,8 @@ section{padding-block:104px; position:relative;}
 .services-preview-content .process-more{margin-top:20px;}
 
 /* carousel spotlight */
-.spotlight{position:relative; border-radius:0; overflow:hidden; min-height:clamp(420px,62vh,620px); display:flex;}
+.spotlight{position:relative; border-radius:24px; overflow:hidden; min-height:clamp(380px,56vh,560px); display:flex;}
+@media (max-width:700px){ .spotlight{border-radius:18px;} }
 .spotlight-slide{position:absolute; inset:0; opacity:0; transition:opacity .6s ease; display:flex; align-items:flex-end; pointer-events:none;}
 .spotlight-slide.is-active{opacity:1; pointer-events:auto;}
 .spotlight-slide img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}

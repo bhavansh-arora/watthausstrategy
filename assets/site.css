@@ -11,6 +11,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;}
+html,body{margin:0;}
 /* color-grade every photo into the site's palette, so photography reads as designed-in rather than pasted-on stock imagery */
 .hero-bg img, .closing-bg img, .feature-card img, .sg-card img, .services-preview img, .spotlight-slide img, .stack-card .media img{
   filter:saturate(.8) contrast(1.05) brightness(.97) sepia(.06);
@@ -124,7 +125,11 @@ nav.is-hidden{transform:translateY(-100%);}
 @media (prefers-reduced-motion:reduce){ .lines .word > span{transform:none !important; opacity:1 !important; transition:none !important;} }
 
 /* ---------- hero (full bleed) ---------- */
-.hero{position:relative; min-height:0;}
+/* break the photo out past the page's side gutter so it's truly edge-to-edge, while the
+   text column keeps its own inset — otherwise both share the same edge and the text reads
+   as pressed right up against the photo's border, with no breathing room from it */
+.hero{position:relative; min-height:0;
+  margin-left:calc(-1 * max(16px, env(safe-area-inset-left,0px))); margin-right:calc(-1 * max(16px, env(safe-area-inset-right,0px)));}
 .hero-bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
 .hero-bg img{width:100%; height:100%; object-fit:cover; display:block; will-change:transform;}
 /* this hero photo is bright sky/cloud at the top and right — the overlay has to guarantee
@@ -132,7 +137,8 @@ nav.is-hidden{transform:translateY(-100%);}
    the bottom-up gradient, so a dedicated top scrim and a wider diagonal layer are added on
    top of the original mood gradient */
 .hero-bg::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(13,19,15,.95) 4%, rgba(13,19,15,.4) 42%, rgba(13,19,15,.18) 70%, rgba(13,19,15,.12) 100%), linear-gradient(100deg, rgba(13,19,15,.6) 0%, rgba(13,19,15,.25) 60%, transparent 90%), linear-gradient(180deg, rgba(13,19,15,.65) 0%, transparent 20%);}
-.hero-inner{position:relative; z-index:1; min-height:clamp(560px,86vh,920px); display:flex; flex-direction:column; justify-content:space-between; padding-block:28px 56px;}
+.hero-inner{position:relative; z-index:1; min-height:clamp(560px,86vh,920px); display:flex; flex-direction:column; justify-content:space-between; padding-block:28px 56px;
+  padding-inline:max(16px, env(safe-area-inset-left,0px)) max(16px, env(safe-area-inset-right,0px));}
 .hero-topline{display:flex; justify-content:space-between; align-items:flex-start; font-family:var(--font-mono); font-size:12.5px; color:var(--gold-light); letter-spacing:.03em;}
 .hero-topline .rec{display:flex; align-items:center; gap:8px;}
 @media (max-width:560px){ .hero-topline{flex-direction:column; align-items:flex-start; gap:6px; font-size:11px;} .hero-topline > span:last-child{text-align:left;} }
@@ -575,11 +581,13 @@ input[type=range]{flex:1; accent-color:var(--gold); min-width:0;}
 .faq-more{margin-top:30px; display:inline-flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:12.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--gold-light);}
 
 /* closing */
-.closing{position:relative; min-height:0; overflow:hidden;}
+.closing{position:relative; min-height:0; overflow:hidden;
+  margin-left:calc(-1 * max(16px, env(safe-area-inset-left,0px))); margin-right:calc(-1 * max(16px, env(safe-area-inset-right,0px)));}
 .closing-bg{position:absolute; inset:0; z-index:0; overflow:hidden;}
 .closing-bg img{width:100%; height:100%; object-fit:cover; will-change:transform;}
 .closing-bg::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(13,19,15,.5), rgba(13,19,15,.93));}
-.closing-inner{position:relative; z-index:1; text-align:center; padding-block:120px;}
+.closing-inner{position:relative; z-index:1; text-align:center; padding-block:120px;
+  padding-inline:max(16px, env(safe-area-inset-left,0px)) max(16px, env(safe-area-inset-right,0px));}
 @media (max-width:700px){ .closing-inner{padding-block:72px;} }
 .closing h2{font-size:clamp(36px,7vw,80px);}
 .closing p{color:var(--muted); margin-top:18px; font-size:17px;}

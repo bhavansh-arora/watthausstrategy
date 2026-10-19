@@ -123,6 +123,8 @@ nav.is-hidden{transform:translateY(-100%);}
 .hero-form{display:flex; gap:0; margin-top:30px; max-width:560px; background:rgba(13,19,15,.55); border:1px solid rgba(243,238,226,.25); backdrop-filter:blur(10px); border-radius:999px; padding:6px; align-items:center;}
 .hero-form select{flex:1; min-width:0; border:none; background:transparent; font-family:var(--font-display); font-size:15px; padding:11px 18px; color:var(--cream); appearance:none;}
 .hero-form select option{color:#111;}
+.hero-form input[type=email]{flex:1; min-width:0; border:none; background:transparent; font-family:var(--font-display); font-size:15px; padding:11px 18px; color:var(--cream);}
+.hero-form input[type=email]::placeholder{color:rgba(243,238,226,.45);}
 .hero-form .btn{white-space:nowrap;}
 @media (max-width:560px){
   .hero-form{flex-wrap:wrap; border-radius:20px; gap:6px;}
@@ -290,6 +292,24 @@ section{padding-block:104px; position:relative;}
 .sg-card .cap .t{font-size:19px; font-weight:700;}
 .sg-card .cap .m{font-family:var(--font-mono); font-size:11px; color:var(--muted); margin-top:4px;}
 @media (max-width:900px){ .services-grid{grid-template-columns:1fr; } }
+
+/* testimonials */
+.testimonial-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:40px;}
+.testimonial-card{background:rgba(243,238,226,.04); border:1px solid rgba(243,238,226,.14); border-radius:18px; padding:30px 26px; display:flex; flex-direction:column; gap:18px; min-height:220px;}
+.testimonial-card .stars{color:var(--gold); font-size:14px; letter-spacing:2px;}
+.testimonial-card .quote{font-size:15.5px; line-height:1.6; color:var(--cream); flex:1;}
+.testimonial-card .person{display:flex; flex-direction:column; gap:2px; padding-top:14px; border-top:1px solid rgba(243,238,226,.12);}
+.testimonial-card .person .name{font-weight:700; font-size:14px;}
+.testimonial-card .person .loc{font-family:var(--font-mono); font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.05em;}
+@media (max-width:900px){ .testimonial-grid{grid-template-columns:1fr;} }
+
+/* guides / resources teaser */
+.guides-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:44px;}
+.g-tag{display:inline-block; font-family:var(--font-mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--gold); border:1px solid rgba(217,166,78,.4); padding:4px 10px; border-radius:999px; margin-bottom:14px;}
+.guides-signup{margin-top:36px; max-width:460px;}
+@media (max-width:900px){ .guides-grid{grid-template-columns:1fr;} }
+
+/* growth / referral cards reuse .process-preview + .pp-card */
 
 /* trusted partners & suppliers */
 .partners-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:16px; overflow:hidden; margin-top:40px;}

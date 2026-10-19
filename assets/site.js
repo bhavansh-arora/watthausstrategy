@@ -390,6 +390,22 @@
     }
   } catch (e) {}
 
+  /* ---------- guides email signup (demo capture, no backend) ---------- */
+  try {
+    var guidesForm = document.getElementById('guidesForm');
+    if (guidesForm){
+      guidesForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        var btn = guidesForm.querySelector('button[type=submit] span');
+        if (!btn) return;
+        var original = btn.textContent;
+        btn.textContent = "You're on the list ✓";
+        guidesForm.querySelector('input[type=email]').disabled = true;
+        setTimeout(function(){ btn.textContent = original; guidesForm.querySelector('input[type=email]').disabled = false; guidesForm.reset(); }, 2600);
+      });
+    }
+  } catch (e) {}
+
   /* ---------- footer quick form -> save region + go to estimate page ---------- */
   try {
     var footCtaBtn = document.getElementById('footCta');

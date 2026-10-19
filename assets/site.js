@@ -53,34 +53,47 @@
     });
   } catch (e) {}
 
-  /* ---------- cross-page transitions ---------- */
+  /* ---------- page transition curtain ---------- */
+  var goTo = function(href){ window.location.href = href; };
   try {
-    document.body.style.opacity = '0';
-    document.body.style.transform = 'translateY(10px)';
-    requestAnimationFrame(function(){
-      requestAnimationFrame(function(){
-        document.body.style.opacity = '1';
-        document.body.style.transform = 'none';
-      });
-    });
-  } catch (e) {}
+    var ptx = document.getElementById('ptx');
+    if (ptx && !reducedMotion){
+      var ptxPanel = ptx.querySelector('.ptx-panel');
+      var LEAVE_MS = 520, ENTER_MS = 680;
 
-  try {
-    var leaving = false;
-    document.querySelectorAll('a[href]').forEach(function(a){
-      var href = a.getAttribute('href');
-      if (!href || !/\.html(#.*)?$/.test(href)) return;
-      if (a.target === '_blank') return;
-      a.addEventListener('click', function(e){
-        if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
-        if (leaving) { e.preventDefault(); return; }
+      /* reveal: flash the mark while still fully covered, then the curtain recedes off the top */
+      setTimeout(function(){ ptx.classList.add('is-marked'); }, 90);
+      setTimeout(function(){
+        ptx.classList.remove('is-marked');
+        ptxPanel.style.transformOrigin = 'top';
+        ptxPanel.style.transition = 'transform ' + ENTER_MS + 'ms cubic-bezier(.76,0,.24,1)';
+        requestAnimationFrame(function(){ ptxPanel.style.transform = 'scaleY(0)'; });
+      }, 260);
+
+      var leaving = false;
+      goTo = function(href){
+        if (leaving) return;
         leaving = true;
-        e.preventDefault();
-        document.body.style.opacity = '0';
-        document.body.style.transform = 'translateY(-10px)';
-        setTimeout(function(){ window.location.href = href; }, reducedMotion ? 0 : 320);
+        ptxPanel.style.transformOrigin = 'top';
+        ptxPanel.style.transition = 'transform ' + LEAVE_MS + 'ms cubic-bezier(.76,0,.24,1)';
+        ptxPanel.style.transform = 'scaleY(1)';
+        setTimeout(function(){ ptx.classList.add('is-marked'); }, Math.round(LEAVE_MS * 0.58));
+        setTimeout(function(){ window.location.href = href; }, LEAVE_MS);
+      };
+
+      document.querySelectorAll('a[href]').forEach(function(a){
+        var href = a.getAttribute('href');
+        if (!href || !/\.html(#.*)?$/.test(href)) return;
+        if (a.target === '_blank') return;
+        a.addEventListener('click', function(e){
+          if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+          e.preventDefault();
+          goTo(href);
+        });
       });
-    });
+    } else if (ptx){
+      ptx.style.display = 'none';
+    }
   } catch (e) {}
 
   /* ---------- header hide/show on scroll + mobile cta bar ---------- */
@@ -212,6 +225,87 @@
   }
   } catch (e) {}
 
+  /* ---------- clip-path image reveal on scroll ---------- */
+  try {
+  if (hasGsap){
+    document.querySelectorAll('.feature-card, .services-preview, .sg-card').forEach(function(card){
+      var img = card.querySelector('img');
+      if (!img) return;
+      gsap.fromTo(img, { clipPath: 'inset(0% 0% 100% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.15, ease: 'power3.out',
+        scrollTrigger: { trigger: card, start: 'top 85%', once: true } });
+    });
+  }
+  } catch (e) {}
+
+  /* ---------- hero cursor-parallax depth ---------- */
+  try {
+  if (hasGsap && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    var heroInner = document.querySelector('.hero-inner');
+    var heroEl = document.querySelector('.hero');
+    if (heroInner && heroEl){
+      var qx = gsap.quickTo(heroInner, 'x', { duration: .7, ease: 'power3.out' });
+      var qy = gsap.quickTo(heroInner, 'y', { duration: .7, ease: 'power3.out' });
+      heroEl.addEventListener('mousemove', function(e){
+        var r = heroEl.getBoundingClientRect();
+        var px = (e.clientX - r.left) / r.width - 0.5;
+        var py = (e.clientY - r.top) / r.height - 0.5;
+        qx(px * 16);
+        qy(py * 10);
+      });
+      heroEl.addEventListener('mouseleave', function(){ qx(0); qy(0); });
+    }
+  }
+  } catch (e) {}
+
+  /* ---------- scroll progress indicator ---------- */
+  try {
+    var navForProgress = document.getElementById('siteNav');
+    if (navForProgress){
+      var progressBar = document.createElement('div');
+      progressBar.className = 'scroll-progress';
+      navForProgress.appendChild(progressBar);
+      var updateProgress = function(){
+        var doc = document.documentElement;
+        var max = doc.scrollHeight - doc.clientHeight;
+        var pct = max > 0 ? Math.min(100, Math.max(0, (window.scrollY / max) * 100)) : 0;
+        progressBar.style.width = pct + '%';
+      };
+      var progressTicking = false;
+      window.addEventListener('scroll', function(){ if (!progressTicking){ requestAnimationFrame(function(){ updateProgress(); progressTicking = false; }); progressTicking = true; } }, { passive: true });
+      window.addEventListener('resize', updateProgress);
+      updateProgress();
+    }
+  } catch (e) {}
+
+  /* ---------- custom cursor (desktop, fine pointer) ---------- */
+  try {
+    if (!reducedMotion && window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+      html.classList.add('has-cursor');
+      var cxDot = document.createElement('div'); cxDot.className = 'cx-dot';
+      var cxRing = document.createElement('div'); cxRing.className = 'cx-ring';
+      document.body.appendChild(cxDot); document.body.appendChild(cxRing);
+      var mx = 0, my = 0, rx = 0, ry = 0, shown = false;
+      document.addEventListener('mousemove', function(e){
+        mx = e.clientX; my = e.clientY;
+        if (!shown){ shown = true; cxDot.classList.add('is-visible'); cxRing.classList.add('is-visible'); rx = mx; ry = my; }
+        cxDot.style.transform = 'translate(' + mx + 'px,' + my + 'px) translate(-50%,-50%)';
+      });
+      (function cxLoop(){
+        rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+        cxRing.style.transform = 'translate(' + rx + 'px,' + ry + 'px) translate(-50%,-50%)';
+        requestAnimationFrame(cxLoop);
+      })();
+      var hoverSel = 'a, button, .btn, input, select, textarea, [role="button"], .faq-q, .spotlight-arrow';
+      document.addEventListener('mouseover', function(e){
+        if (e.target.closest && e.target.closest(hoverSel)){ cxRing.classList.add('is-active'); cxDot.classList.add('is-active'); }
+      });
+      document.addEventListener('mouseout', function(e){
+        if (e.target.closest && e.target.closest(hoverSel)){ cxRing.classList.remove('is-active'); cxDot.classList.remove('is-active'); }
+      });
+      document.addEventListener('mouseleave', function(){ cxDot.classList.remove('is-visible'); cxRing.classList.remove('is-visible'); });
+    }
+  } catch (e) {}
+
   /* ---------- stacking process cards (desktop) ---------- */
   try {
   if (hasGsap && window.innerWidth >= 900){
@@ -288,9 +382,7 @@
       heroForm.addEventListener('submit', function(e){
         e.preventDefault();
         saveRegion(heroRegionEl.value);
-        document.body.style.opacity = '0';
-        document.body.style.transform = 'translateY(-10px)';
-        setTimeout(function(){ window.location.href = 'estimate.html'; }, reducedMotion ? 0 : 320);
+        goTo('estimate.html');
       });
     }
   } catch (e) {}
@@ -302,9 +394,7 @@
     if (footCtaBtn){
       footCtaBtn.addEventListener('click', function(){
         if (footRegionEl) saveRegion(footRegionEl.value);
-        document.body.style.opacity = '0';
-        document.body.style.transform = 'translateY(-10px)';
-        setTimeout(function(){ window.location.href = 'estimate.html'; }, reducedMotion ? 0 : 320);
+        goTo('estimate.html');
       });
     }
   } catch (e) {}
